@@ -8,8 +8,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "typegen": "next typegen",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "data:generate": "node scripts/generate-color-seeds.mjs",
+    "data:check": "node scripts/generate-color-seeds.mjs --check"
   },
   "dependencies": {
     "culori": "^4.0.2",

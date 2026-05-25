@@ -10,6 +10,9 @@ const config: Config = {
       },
       boxShadow: {
         soft: "0 18px 60px rgb(15 23 42 / 0.08)"
+      },
+      transitionTimingFunction: {
+        fluid: "cubic-bezier(0.16, 1, 0.3, 1)"
       }
     }
   },

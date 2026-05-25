@@ -1,0 +1,80 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - button "国色 中国传统色 Zen Color Spec & App" [ref=e5] [cursor=pointer]:
+        - generic [ref=e6]: 国色
+        - generic [ref=e7]:
+          - generic [ref=e8]: 中国传统色
+          - generic [ref=e9]: Zen Color Spec & App
+      - navigation [ref=e10]:
+        - button "主页大观" [ref=e11] [cursor=pointer]
+        - button "天工开物" [ref=e12] [cursor=pointer]
+        - button "画轴印制" [active] [ref=e13] [cursor=pointer]
+        - button "设计指南" [ref=e14] [cursor=pointer]
+      - button "采色袋 0" [ref=e16] [cursor=pointer]:
+        - img [ref=e17]
+        - generic [ref=e19]: 采色袋
+        - generic [ref=e20]: "0"
+    - main [ref=e21]:
+      - generic [ref=e250]:
+        - generic [ref=e251]:
+          - heading "画轴印制" [level=3] [ref=e252]
+          - paragraph [ref=e253]: Interactive Hanging Poster Scroll & Developer Exporter
+        - generic [ref=e254]:
+          - generic [ref=e257]:
+            - generic [ref=e260]:
+              - generic [ref=e261]:
+                - generic [ref=e262]: CHINESE AESTHETIC
+                - generic [ref=e263]: 唐朝风雅
+              - generic [ref=e264]: 霞染
+            - generic [ref=e265]:
+              - generic [ref=e266]: 落霞红
+              - generic [ref=e269]: 落霞与孤鹜齐飞，秋水共长天一色。
+            - generic [ref=e270]:
+              - generic [ref=e271]:
+                - generic [ref=e272]: "HEX: #cf4813"
+                - generic [ref=e273]: "PINYIN: luo xia hong"
+              - generic [ref=e274]: 中华传统色
+          - generic [ref=e275]:
+            - generic [ref=e276]:
+              - heading "海报装裱参数" [level=4] [ref=e277]:
+                - generic [ref=e278]: 海报装裱参数
+                - img [ref=e279]
+              - generic [ref=e282]:
+                - generic [ref=e283]:
+                  - text: 刻写朱砂印章
+                  - generic [ref=e284]:
+                    - textbox [ref=e285]: 霞染
+                    - button "重刻" [ref=e286] [cursor=pointer]
+                - generic [ref=e287]:
+                  - text: 从采色袋选择主色
+                  - combobox [ref=e288]:
+                    - option "-- 选择采色袋中的主色 --" [selected]
+            - generic [ref=e289]:
+              - generic [ref=e290]:
+                - heading "开发者代码输出" [level=4] [ref=e291]
+                - generic [ref=e292]:
+                  - button "CSS" [ref=e293] [cursor=pointer]
+                  - button "Tailwind" [ref=e294] [cursor=pointer]
+                  - button "JSON" [ref=e295] [cursor=pointer]
+              - generic [ref=e296]:
+                - button [ref=e297] [cursor=pointer]:
+                  - img [ref=e298]
+                - generic [ref=e301]: ":root { --ccc-name: \"落霞红\"; --ccc-50: #fff3e9; --ccc-100: #ffe3d2; --ccc-200: #ffc8ae; --ccc-300: #ffa17d; --ccc-400: #f67348; --ccc-500: #d85120; --ccc-600: #b23802; --ccc-700: #8c2900; --ccc-800: #651b00; --ccc-900: #411001; --ccc-950: #250600; }"
+              - button "保存当前色板" [ref=e302] [cursor=pointer]:
+                - img [ref=e303]
+                - text: 保存当前色板
+            - generic [ref=e305]:
+              - heading "我的色板" [level=4] [ref=e306]
+              - paragraph [ref=e307]: 当前浏览器还没有保存的色板。
+    - generic [ref=e178]:
+      - generic [ref=e180]:
+        - generic [ref=e181]:
+          - heading "采色袋" [level=4] [ref=e182]
+          - paragraph [ref=e183]: PALETTE BAG
+        - button [ref=e184] [cursor=pointer]:
+          - img [ref=e185]
+      - generic [ref=e189]: 暂未采色。请先在探索器中挑选心仪之色。
+  - button "Open Next.js Dev Tools" [ref=e215] [cursor=pointer]:
+    - img [ref=e216]
+  - alert [ref=e219]

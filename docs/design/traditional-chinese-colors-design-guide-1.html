@@ -1,0 +1,417 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>东方禅意设计指南 — 中国传统色美学规范</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font-Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cinnabar: '#C12C1F',
+            gold: '#D4AF37',
+            charcoal: '#2B2B2B',
+            paper: '#FAF8F5'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ----------------------------------------------------
+       1. CORE TOKENS (Classical Xuan Paper)
+       ---------------------------------------------------- */
+    :root {
+      --bg-paper: oklch(98% 0.005 85); /* #faf8f5 Xuan Paper */
+      --bg-surface: oklch(100% 0 0);
+      --fg-ink: oklch(18% 0.01 70); /* Deep charcoal */
+      --fg-muted: oklch(45% 0.008 70);
+      --border-ink: oklch(20% 0.01 70 / 8%);
+      --border-ink-active: oklch(20% 0.01 70 / 25%);
+      --accent-cinnabar: oklch(50% 0.18 30); /* #C12C1F */
+      --accent-gold: oklch(78% 0.12 85); /* #D4AF37 */
+      
+      --font-display: "STSong", "Songti SC", "SimSun", "Noto Serif CJK SC", serif;
+      --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+      --transition-fast: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-ease: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--fg-ink);
+      background-color: var(--bg-paper);
+    }
+
+    /* Rice paper texture background */
+    .rice-paper {
+      background-color: var(--bg-paper);
+      background-image: 
+        radial-gradient(oklch(20% 0.01 70 / 4%) 1.2px, transparent 0),
+        radial-gradient(oklch(20% 0.01 70 / 4%) 1.2px, transparent 0);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+      position: relative;
+    }
+    .rice-paper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* Traditional Vertical Text Layout */
+    .vertical-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: var(--font-display);
+    }
+
+    /* Cinnabar Seal/Stamp Style */
+    .cinnabar-seal {
+      border: 2px solid var(--accent-cinnabar);
+      color: var(--accent-cinnabar);
+      font-family: var(--font-display);
+      writing-mode: vertical-rl;
+      line-height: 1.1;
+      text-align: center;
+      letter-spacing: 0.12em;
+      box-shadow: inset 0 0 4px rgba(193, 44, 31, 0.15), 0 2px 8px rgba(193, 44, 31, 0.08);
+      position: relative;
+      background: radial-gradient(circle, rgba(250,248,245,0.85) 0%, rgba(250,248,245,0.4) 100%);
+    }
+    .cinnabar-seal::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border: 1px dashed var(--accent-cinnabar);
+      opacity: 0.4;
+    }
+
+    /* Specimen grid block styling */
+    .specimen-grid {
+      background-image: linear-gradient(var(--border-ink) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border-ink) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      transform: translateY(40px);
+      background: var(--fg-ink);
+      color: var(--bg-paper);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition-fast);
+      z-index: 150;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .toast-msg.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="rice-paper min-h-screen flex flex-col selection:bg-cinnabar selection:text-white">
+
+  <!-- ----------------------------------------------------
+       TOP HEADER BRANDING
+       ---------------------------------------------------- -->
+  <header class="sticky top-0 z-50 bg-[#faf8f5]/90 backdrop-blur-md border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="cinnabar-seal w-9 h-9 flex items-center justify-center font-bold text-sm rounded-sm">
+          指南
+        </div>
+        <div>
+          <h1 class="font-serif font-bold text-lg tracking-widest text-charcoal">东方禅意设计指南</h1>
+          <p class="text-[9px] font-mono tracking-wider text-black/40 uppercase mt-0.5">Zhongguose UI Design Specification</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-mono text-black/40 bg-black/5 px-2.5 py-1 rounded">v1.2 (Active Spec)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ----------------------------------------------------
+       MAIN SPECIFICATION CONTENT
+       ---------------------------------------------------- -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Left Sticky Navigator -->
+    <aside class="lg:col-span-3 space-y-4 lg:sticky lg:top-24 h-fit">
+      <div class="bg-white border border-black/5 p-5 rounded-xl space-y-2 shadow-sm">
+        <p class="text-[10px] font-mono tracking-widest text-cinnabar font-bold">SPECIFICATION INDEX</p>
+        <nav class="flex flex-col gap-1 font-serif text-sm text-charcoal/70">
+          <a href="#section-philosophy" class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"><span class="font-mono text-xs opacity-50">01.</span> 美学哲学</a>
+          <a href="#section-colors" class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"><span class="font-mono text-xs opacity-50">02.</span> 基础色盘</a>
+          <a href="#section-typography" class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"><span class="font-mono text-xs opacity-50">03.</span> 字体与章法</a>
+          <a href="#section-components" class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"><span class="font-mono text-xs opacity-50">04.</span> 核心组件Spec</a>
+          <a href="#section-interaction" class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2"><span class="font-mono text-xs opacity-50">05.</span> 触觉交互规范</a>
+        </nav>
+      </div>
+
+      <div class="bg-white border border-black/5 p-5 rounded-xl space-y-3 shadow-sm">
+        <h4 class="font-serif text-xs font-bold text-charcoal flex items-center gap-2">
+          <i class="fa-solid fa-seedling text-cinnabar"></i>
+          <span>何为“计白当黑”？</span>
+        </h4>
+        <p class="text-[11px] text-charcoal/60 leading-relaxed font-serif">
+          在东方禅意版面中，留白不等于“空白”。空白是具有张力的设计元素。四周留白能让核心色彩与文字获得宗教器物般的端庄感。
+        </p>
+      </div>
+    </aside>
+
+    <!-- Right Detailed Spec Sheet -->
+    <div class="lg:col-span-9 space-y-12">
+
+      <!-- SECTION 1: PHILOSOPHY -->
+      <section id="section-philosophy" class="bg-white border border-black/5 rounded-2xl p-6 md:p-8 space-y-6 shadow-sm">
+        <div class="flex items-center gap-3 border-b border-black/5 pb-4">
+          <span class="font-mono text-2xl text-cinnabar/30">01/</span>
+          <h2 class="font-serif text-2xl text-charcoal tracking-wider">东方禅意之美学心法</h2>
+        </div>
+        
+        <p class="text-sm font-serif text-charcoal/70 leading-relaxed">
+          中国传统色设计不应是“复古堆砌”，而是**用现代精准的几何骨骼承载千年的风雅余韵**。整体遵循“简、远、凝、润”四大核心心法：
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="border border-black/5 p-4 rounded-lg space-y-2">
+            <h4 class="font-serif font-bold text-charcoal flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cinnabar"></span> 简 · 拒绝多余雕饰
+            </h4>
+            <p class="text-xs text-charcoal/60 leading-relaxed font-serif">
+              不使用大面积多色渐变，不采用生硬的强投影或多层描边。通过极其纤细的墨线（1px）与纯净的留白建立边界。
+            </p>
+          </div>
+          <div class="border border-black/5 p-4 rounded-lg space-y-2">
+            <h4 class="font-serif font-bold text-charcoal flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cinnabar"></span> 远 · 意境深远留白
+            </h4>
+            <p class="text-xs text-charcoal/60 leading-relaxed font-serif">
+              页面的纵向间距、文字与容器边距，必须比常规后台管理页面宽 1.5 倍以上。给眼睛呼吸与冥想的空间。
+            </p>
+          </div>
+          <div class="border border-black/5 p-4 rounded-lg space-y-2">
+            <h4 class="font-serif font-bold text-charcoal flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cinnabar"></span> 凝 · 精准的朱砂锚点
+            </h4>
+            <p class="text-xs text-charcoal/60 leading-relaxed font-serif">
+              在一个视觉层级中，高纯度的朱砂红（Cinnabar Seal）至多出现两次。如古画中的红色落款，是极静空间中的一声钟鸣。
+            </p>
+          </div>
+          <div class="border border-black/5 p-4 rounded-lg space-y-2">
+            <h4 class="font-serif font-bold text-charcoal flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cinnabar"></span> 润 · 润物细无声
+            </h4>
+            <p class="text-xs text-charcoal/60 leading-relaxed font-serif">
+              交互变化不使用唐突的弹跳或极快的瞬间切换，而是使用 400ms 至 500ms 的缓入缓出过渡（Cubic Bezier），如墨入水。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: COLORS -->
+      <section id="section-colors" class="bg-white border border-black/5 rounded-2xl p-6 md:p-8 space-y-6 shadow-sm">
+        <div class="flex items-center gap-3 border-b border-black/5 pb-4">
+          <span class="font-mono text-2xl text-cinnabar/30">02/</span>
+          <h2 class="font-serif text-2xl text-charcoal tracking-wider">色彩基础变量与系统架构</h2>
+        </div>
+
+        <p class="text-sm font-serif text-charcoal/70 leading-relaxed">
+          背景必须保持优雅温润，而不是耀眼的死白或生硬的数码灰。下面是本规范的黄金代号和 OKLch / RGB 参数：
+        </p>
+
+        <!-- Color Token Grids -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Token: Background Xuan Paper -->
+          <div class="border border-black/5 rounded-xl p-4 flex gap-4 items-center bg-paper relative overflow-hidden">
+            <div class="w-12 h-12 rounded-full bg-[#FAF8F5] border border-black/10 flex-shrink-0 flex items-center justify-center text-[10px] text-charcoal/40 font-mono">Xuan</div>
+            <div class="flex-grow">
+              <div class="flex justify-between items-center">
+                <span class="font-serif font-bold text-charcoal">宣纸素底 (Background)</span>
+                <span class="font-mono text-xs text-cinnabar font-bold">--bg-paper</span>
+              </div>
+              <div class="text-[11px] text-charcoal/50 font-mono mt-1">oklch(98% 0.005 85) / #FAF8F5</div>
+              <p class="text-[10px] text-charcoal/60 font-serif mt-1">用于整体大底。模拟未漂白的手工竹浆宣纸纤维色调。</p>
+            </div>
+          </div>
+
+          <!-- Token: Ink Charcoal -->
+          <div class="border border-black/5 rounded-xl p-4 flex gap-4 items-center bg-white relative overflow-hidden">
+            <div class="w-12 h-12 rounded-full bg-[#2B2B2B] border border-black/10 flex-shrink-0"></div>
+            <div class="flex-grow">
+              <div class="flex justify-between items-center">
+                <span class="font-serif font-bold text-charcoal">徽州松烟墨 (Text / Foreground)</span>
+                <span class="font-mono text-xs text-cinnabar font-bold">--fg-ink</span>
+              </div>
+              <div class="text-[11px] text-charcoal/50 font-mono mt-1">oklch(18% 0.01 70) / #2B2B2B</div>
+              <p class="text-[10px] text-charcoal/60 font-serif mt-1">用于文字、重点刻线。保留徽墨温润、富有层次的碳墨色泽。</p>
+            </div>
+          </div>
+
+          <!-- Token: Accent Cinnabar -->
+          <div class="border border-black/5 rounded-xl p-4 flex gap-4 items-center bg-white relative overflow-hidden">
+            <div class="w-12 h-12 rounded-full bg-[#C12C1F] border border-black/10 flex-shrink-0"></div>
+            <div class="flex-grow">
+              <div class="flex justify-between items-center">
+                <span class="font-serif font-bold text-charcoal">大红朱砂印 (Accent Red)</span>
+                <span class="font-mono text-xs text-cinnabar font-bold">--accent-cinnabar</span>
+              </div>
+              <div class="text-[11px] text-charcoal/50 font-mono mt-1">oklch(50% 0.18 30) / #C12C1F</div>
+              <p class="text-[10px] text-charcoal/60 font-serif mt-1">主要强调色。源自天然辰砂矿物染料，纯正夺目，常作印信之章。</p>
+            </div>
+          </div>
+
+          <!-- Token: Elegant Gold -->
+          <div class="border border-black/5 rounded-xl p-4 flex gap-4 items-center bg-white relative overflow-hidden">
+            <div class="w-12 h-12 rounded-full bg-[#D4AF37] border border-black/10 flex-shrink-0"></div>
+            <div class="flex-grow">
+              <div class="flex justify-between items-center">
+                <span class="font-serif font-bold text-charcoal">描金织锦 (Secondary Gold)</span>
+                <span class="font-mono text-xs text-cinnabar font-bold">--accent-gold</span>
+              </div>
+              <div class="text-[11px] text-charcoal/50 font-mono mt-1">oklch(78% 0.12 85) / #D4AF37</div>
+              <p class="text-[10px] text-charcoal/60 font-serif mt-1">次要强调/高光。富贵而不喧哗的亚光金，用于微章、卡边修饰。</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Copy Quick Code Setup -->
+        <div class="bg-gray-50 border border-black/5 rounded-xl p-4 font-mono text-xs relative">
+          <button onclick="copyToClipboard('root-css-code', 'CSS变量已复制')" class="absolute top-3 right-3 text-charcoal/40 hover:text-cinnabar transition-all">
+            <i class="fa-regular fa-clone"></i>
+          </button>
+          <div class="text-charcoal/40 mb-2">// CSS:root 核心配色定义</div>
+          <pre id="root-css-code" class="text-charcoal/80 overflow-x-auto">:root {
+  --bg-paper: oklch(98% 0.004 85);
+  --fg-ink: oklch(18% 0.01 70);
+  --accent-cinnabar: oklch(50% 0.18 30);
+  --border-ink: oklch(20% 0.01 70 / 8%);
+}</pre>
+        </div>
+      </section>
+
+      <!-- SECTION 3: TYPOGRAPHY -->
+      <section id="section-typography" class="bg-white border border-black/5 rounded-2xl p-6 md:p-8 space-y-6 shadow-sm">
+        <div class="flex items-center gap-3 border-b border-black/5 pb-4">
+          <span class="font-mono text-2xl text-cinnabar/30">03/</span>
+          <h2 class="font-serif text-2xl text-charcoal tracking-wider">宋体风流与等宽对照</h2>
+        </div>
+
+        <p class="text-sm font-serif text-charcoal/70 leading-relaxed">
+          排版系统的灵魂在于**“文理分明”**。展示性的大标题、竖排诗词必须采用宋体（Songti CJK）；而具体色值、代码等现代测量数据，必须采用利落、可读性极强的等宽体。
+        </p>
+
+        <!-- Interactive Specimen Bench -->
+        <div class="border border-black/10 rounded-xl overflow-hidden specimen-grid p-6 space-y-6">
+          <p class="text-[10px] font-mono tracking-widest text-black/30">// TYPOGRAPHY WORKBENCH (FONT FAMILY & SCALE)</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            
+            <!-- Vertical Title Specimen -->
+            <div class="md:col-span-5 flex justify-center items-center py-4 bg-[#faf8f5]/60 border border-black/5 rounded-lg">
+              <div class="flex gap-4">
+                <div class="vertical-text text-3xl font-serif text-charcoal tracking-widest leading-loose">
+                  修竹凝妆<br>
+                  <span class="text-cinnabar">一树梅花</span>
+                </div>
+                <div class="vertical-text text-xs text-charcoal/50 font-serif tracking-widest mt-6">
+                  宋代用色风雅意气
+                </div>
+              </div>
+            </div>
+
+            <!-- Monospace Code Specs Contrast -->
+            <div class="md:col-span-7 space-y-3 justify-center flex flex-col">
+              <div class="border-l-2 border-cinnabar pl-3">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-black/40">展示宋体 Fallback</div>
+                <div class="font-serif text-base text-charcoal mt-0.5">"STSong", "Songti SC", "SimSun", serif</div>
+              </div>
+              <div class="border-l-2 border-charcoal/25 pl-3">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-black/40">技术等宽 Fallback</div>
+                <div class="font-mono text-xs text-charcoal mt-0.5">"JetBrains Mono", "SF Mono", monospace</div>
+              </div>
+              <div class="border-l-2 border-charcoal/25 pl-3">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-black/40">黄金排版间距比例</div>
+                <div class="text-xs text-charcoal/60 font-serif mt-0.5">
+                  行高 <code class="font-mono text-[11px] bg-black/5 px-1 py-0.5 rounded">line-height: 1.8</code>
+                  字间距 <code class="font-mono text-[11px] bg-black/5 px-1 py-0.5 rounded">letter-spacing: 0.15em</code>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: COMPONENTS SPEC -->
+      <section id="section-components" class="bg-white border border-black/5 rounded-2xl p-6 md:p-8 space-y-6 shadow-sm">
+        <div class="flex items-center gap-3 border-b border-black/5 pb-4">
+          <span class="font-mono text-2xl text-cinnabar/30">04/</span>
+          <h2 class="font-serif text-2xl text-charcoal tracking-wider">核心美学组件 Spec 及在线生成</h2>
+        </div>
+
+        <p class="text-sm font-serif text-charcoal/70 leading-relaxed">
+          这一套美学包含了标志性的**“朱砂金边印章”**和**“纵向卡牌柱”**。下面为您准备了可以交互调试的组件生成面板，所见即所得。
+        </p>
+
+        <!-- Specimen A: Custom Seal Stamp Generator -->
+        <div class="border border-black/5 rounded-xl p-5 space-y-4">
+          <div class="flex justify-between items-center border-b border-black/5 pb-3">
+            <h4 class="font-serif text-sm font-bold text-charcoal">1. 朱砂古法金边印章 Spec</h4>
+            <span class="text-[10px] font-mono text-black/30">CLASSICAL SEAL COMPONENT</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="space-y-3">
+              <p class="text-xs text-charcoal/60 leading-relaxed font-serif">
+                印章在古画中代表归属、品赏与印证。本系统支持自定义刻写 2 个至 4 个汉字。自动渲染具有传统斑驳质感的双框线朱砂印章。
+              </p>
+              
+              <!-- Input Customizer -->
+              <div class="flex gap-2">
+                <input type="text" id="seal-text-input" max="4" value="雅画赏析" placeholder="刻字(限4字)" class="bg-paper border border-black/10 text-xs px-3 py-2 rounded focus:outline-none focus:border-cinnabar flex-grow">
+                <button onclick="updateSeal()" class="bg-cinnabar text-white text-xs font-serif px-4 py-2 rounded hover:bg-red-800 transition-all">
+                  刻印章
+                </button>
+              </div>
+            </div>
+
+            <!-- Interactive Seal Result Frame -->
+            <div class="flex justify-center py-4 bg-[#faf8f5]/60 border border-black/5 rounded-lg">
+              <div class="flex flex-col items-center gap-2">
+                <!-- Seal preview target -->
+                <div id="live-seal-preview" class="cinnabar-seal w-14 h-14 flex items-center justify-center font-bold text-base rounded-sm">
+                  雅画赏析
+                </div>
+                <span class="text-[10px] font-mono text-black/40">刻印：14px ~ 18px 楷宋体</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specimen B: Color Rod Spec (Vertical Card) -->
+        <div class="border border-black/5 rounded-xl p-5 space-y-4">
+          <div class="flex justify-between items-center border-b border-black/5 pb-3">

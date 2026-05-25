@@ -21,6 +21,18 @@ describe("color-utils", () => {
     expect(scale.colors).toHaveLength(11);
     expect(scale.colors.map((color) => color.step)).toEqual([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]);
     expect(scale.colors.every((color) => /^#[0-9a-f]{6}$/.test(color.hex))).toBe(true);
+    expect(scale.options).toEqual({ lightnessShift: 0, chromaScale: 1 });
+  });
+
+  it("applies scale generation options", () => {
+    const defaultScale = generateScale("#cf4813", colorSeeds[0]);
+    const tunedScale = generateScale("#cf4813", colorSeeds[0], {
+      lightnessShift: 0.04,
+      chromaScale: 1.2
+    });
+
+    expect(tunedScale.options).toEqual({ lightnessShift: 0.04, chromaScale: 1.2 });
+    expect(tunedScale.colors.map((color) => color.hex)).not.toEqual(defaultScale.colors.map((color) => color.hex));
   });
 
   it("selects readable foreground color", () => {
@@ -33,5 +45,12 @@ describe("color-utils", () => {
 
     expect(nearby).toHaveLength(3);
     expect(nearby.some((seed) => seed.id === colorSeeds[0].id)).toBe(false);
+  });
+
+  it("finds nearby seeds from the expanded collection", () => {
+    const nearby = findNearbySeeds("#cf4813", undefined, 5);
+
+    expect(nearby).toHaveLength(5);
+    expect(nearby.every((seed) => /^#[0-9a-f]{6}$/.test(seed.hex))).toBe(true);
   });
 });

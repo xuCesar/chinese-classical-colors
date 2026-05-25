@@ -1,0 +1,435 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国传统色 — 中华色彩美学与色谱生成器</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font-Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cinnabar: '#C12C1F',
+            gold: '#D4AF37',
+            charcoal: '#2B2B2B',
+            paper: '#FAF8F5'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ----------------------------------------------------
+       1. CORE DESIGN VARIABLES & TOKENS (Classical Xuan Paper)
+       ---------------------------------------------------- */
+    :root {
+      --bg-paper: oklch(98% 0.005 85); /* #faf8f5 Traditional Xuan Paper */
+      --bg-surface: oklch(100% 0 0);
+      --fg-ink: oklch(18% 0.01 70); /* Soft ink-charcoal */
+      --fg-muted: oklch(45% 0.008 70);
+      --border-ink: oklch(20% 0.01 70 / 8%);
+      --border-ink-active: oklch(20% 0.01 70 / 25%);
+      --accent-cinnabar: oklch(50% 0.18 30); /* #C12C1F (Imperial Seal red) */
+      
+      --font-display: "STSong", "Songti SC", "SimSun", "Noto Serif CJK SC", serif;
+      --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      
+      --transition-ease: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--fg-ink);
+      background-color: var(--bg-paper);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Rice paper fiber and subtle screen-texture overlays */
+    .rice-paper {
+      background-color: var(--bg-paper);
+      background-image: 
+        radial-gradient(oklch(20% 0.01 70 / 4%) 1.2px, transparent 0),
+        radial-gradient(oklch(20% 0.01 70 / 4%) 1.2px, transparent 0);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+      position: relative;
+    }
+    
+    .rice-paper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Traditional Vertical Script Typography */
+    .vertical-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: var(--font-display);
+    }
+
+    /* Custom high density scrollbar styles */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-ink-active);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--fg-muted);
+    }
+
+    /* ----------------------------------------------------
+       SEAL / INK EFFECTS & STAMP ANIMATION
+       ---------------------------------------------------- */
+    .cinnabar-seal {
+      border: 2px solid var(--accent-cinnabar);
+      color: var(--accent-cinnabar);
+      font-family: var(--font-display);
+      writing-mode: vertical-rl;
+      line-height: 1.1;
+      text-align: center;
+      letter-spacing: 0.1em;
+      box-shadow: inset 0 0 4px rgba(193, 44, 31, 0.15), 0 2px 8px rgba(193, 44, 31, 0.1);
+      position: relative;
+      background: radial-gradient(circle, rgba(250,248,245,0.85) 0%, rgba(250,248,245,0.4) 100%);
+    }
+
+    .cinnabar-seal::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border: 1px dashed var(--accent-cinnabar);
+      opacity: 0.5;
+    }
+
+    /* Classic vertical rod column layout styling */
+    .color-rod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 1.5rem 0.85rem;
+    }
+
+    .color-rod {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-ink);
+      transition: var(--transition-ease);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: 350px;
+    }
+
+    .color-rod:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-ink-active);
+      box-shadow: 0 16px 32px rgba(43, 43, 43, 0.08);
+    }
+
+    .color-rod.active-pin {
+      border-color: var(--accent-cinnabar);
+      box-shadow: 0 0 0 1.5px var(--accent-cinnabar);
+    }
+
+    .rod-vertical-label {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      letter-spacing: 0.15em;
+    }
+
+    /* Mobile bottom sheet drawer styles */
+    .bottom-sheet {
+      position: fixed;
+      inset: auto 0 0 0;
+      background: var(--bg-surface);
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.12);
+      transform: translateY(101%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+      max-height: 85vh;
+    }
+
+    .bottom-sheet.open {
+      transform: translateY(0);
+    }
+
+    .bottom-sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      z-index: 90;
+    }
+
+    .bottom-sheet-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Visual audio ripples */
+    @keyframes visualWave {
+      0%, 100% { height: 4px; }
+      50% { height: 24px; }
+    }
+    .wave-bar {
+      width: 3px;
+      background-color: var(--accent-cinnabar);
+      border-radius: 1px;
+    }
+    .wave-bar.playing {
+      animation: visualWave 1.2s ease-in-out infinite;
+    }
+
+    /* ----------------------------------------------------
+       RESPONSIVE & POSTER CARD SCALING
+       ---------------------------------------------------- */
+    .poster-canvas {
+      width: 100%;
+      aspect-ratio: 3/4;
+      max-width: 420px;
+      box-shadow: 0 20px 50px rgba(43, 43, 43, 0.15);
+      border: 1px solid var(--border-ink-active);
+      transition: var(--transition-ease);
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      .color-rod-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.85rem 0.6rem;
+      }
+      .color-rod {
+        height: 295px;
+      }
+    }
+
+    /* Active navigation Tab Highlighting */
+    .nav-btn-active {
+      color: var(--accent-cinnabar) !important;
+      font-weight: 600;
+    }
+    .nav-btn-active::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 10%;
+      width: 80%;
+      height: 2px;
+      background-color: var(--accent-cinnabar);
+    }
+
+    /* Custom Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 40px);
+      background: var(--fg-ink);
+      color: var(--bg-paper);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 150;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .toast-msg.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="rice-paper min-h-screen flex flex-col selection:bg-cinnabar selection:text-white">
+
+  <!-- ----------------------------------------------------
+       A. HEADER CHROME
+       ---------------------------------------------------- -->
+  <header class="sticky top-0 z-50 bg-[#faf8f5]/95 backdrop-blur-md border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
+      
+      <!-- Logo Block -->
+      <a href="#" onclick="switchView('landing')" class="flex items-center gap-3">
+        <div class="seal-logo cinnabar-seal w-9 h-9 flex items-center justify-center font-bold text-sm rounded-sm">
+          色彩
+        </div>
+        <div class="leading-none">
+          <h1 class="font-serif font-bold text-lg tracking-widest text-charcoal">中国传统色</h1>
+          <p class="text-[9px] font-mono tracking-wider text-black/40 uppercase mt-0.5">Zhongguose Explorer</p>
+        </div>
+      </a>
+
+      <!-- Desktop Tabs -->
+      <nav class="hidden md:flex items-center gap-8 relative">
+        <button onclick="switchView('landing')" class="nav-btn-tab font-serif py-1 text-charcoal/60 hover:text-cinnabar transition-all duration-300 relative text-sm tracking-widest nav-btn-active" id="tab-landing">
+          主页大观
+        </button>
+        <button onclick="switchView('explorer')" class="nav-btn-tab font-serif py-1 text-charcoal/60 hover:text-cinnabar transition-all duration-300 relative text-sm tracking-widest" id="tab-explorer">
+          天工开物
+        </button>
+        <button onclick="switchView('exporter')" class="nav-btn-tab font-serif py-1 text-charcoal/60 hover:text-cinnabar transition-all duration-300 relative text-sm tracking-widest" id="tab-exporter">
+          画轴印制
+        </button>
+      </nav>
+
+      <!-- Active Palette Bag Status -->
+      <div class="flex items-center gap-4">
+        <button onclick="openPaletteDrawer()" class="relative border border-black/10 hover:border-cinnabar px-4 py-1.5 rounded-full text-xs font-serif text-charcoal hover:text-cinnabar bg-white/50 backdrop-blur-sm transition-all duration-300 flex items-center gap-2">
+          <i class="fa-solid fa-feather-pointed"></i>
+          <span>采色袋</span>
+          <span id="bag-count" class="bg-cinnabar text-white rounded-full w-4 h-4 inline-flex items-center justify-center text-[9px] font-sans">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Floating Tab Navigation Bar (Bottom fixed only on small screens) -->
+  <div class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-sm bg-white/95 backdrop-blur-lg border border-black/10 rounded-full py-2.5 px-6 shadow-xl flex justify-around text-charcoal/60">
+    <button onclick="switchView('landing')" class="mobile-nav-item flex flex-col items-center gap-1 font-serif text-[10px] text-cinnabar" id="m-tab-landing">
+      <i class="fa-solid fa-house-chimney text-base"></i>
+      <span>主页</span>
+    </button>
+    <button onclick="switchView('explorer')" class="mobile-nav-item flex flex-col items-center gap-1 font-serif text-[10px]" id="m-tab-explorer">
+      <i class="fa-solid fa-palette text-base"></i>
+      <span>色谱</span>
+    </button>
+    <button onclick="switchView('exporter')" class="mobile-nav-item flex flex-col items-center gap-1 font-serif text-[10px]" id="m-tab-exporter">
+      <i class="fa-solid fa-scroll text-base"></i>
+      <span>印制</span>
+    </button>
+  </div>
+
+  <!-- ----------------------------------------------------
+       B. MAIN APP VIEWS
+       ---------------------------------------------------- -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 py-8 pb-28 md:pb-12">
+
+    <!-- =================== VIEW 1: LANDING & EDITORIAL =================== -->
+    <section id="view-landing" class="view-panel active space-y-16">
+      
+      <!-- Editorial Hero banner -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-6">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="editorial-eyebrow">
+            CHINESE CLASSICAL COLOR SPECTRUM
+          </div>
+          <h2 class="text-4xl md:text-6xl font-serif leading-tight text-charcoal tracking-wide">
+            雨过天晴云破处<br>
+            <span class="text-cinnabar">这般颜色</span>做将来
+          </h2>
+          <p class="text-sm md:text-base text-charcoal/70 leading-relaxed font-serif max-w-lg">
+            中华传统色彩美学，肇始于河图洛书，成系统于春秋诸子。青、赤、黄、白、黑为五正色。本色谱重现三百二十味传统色之雅韵，让东方色彩在现代设计中流淌。
+          </p>
+          <div class="pt-4 flex flex-wrap gap-4">
+            <button onclick="switchView('explorer')" class="btn-primary flex items-center gap-2 bg-cinnabar hover:bg-red-800 text-white font-serif px-6 py-3 rounded-md transition-all duration-300 shadow-md">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>步入色谱大观</span>
+            </button>
+            <button onclick="switchView('exporter')" class="btn-secondary flex items-center gap-2 border border-black/20 hover:border-black/50 font-serif px-6 py-3 rounded-md transition-all duration-300">
+              <i class="fa-solid fa-scroll"></i>
+              <span>印制东方画轴</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Calligraphy & Scrolling Pillar Cards Showcase -->
+        <div class="lg:col-span-5 h-[420px] flex items-center justify-center relative overflow-hidden bg-white/40 border border-black/5 rounded-2xl p-4">
+          <div class="flex gap-4 md:gap-6 h-full items-center">
+            
+            <!-- Pillar 1: Tianqing -->
+            <div onclick="previewClassicColor('8EA9B5')" class="w-24 md:w-28 h-[85%] bg-white rounded-lg border border-black/5 shadow-md flex flex-col overflow-hidden cursor-pointer hover:-translate-y-4 transition-all duration-500">
+              <div class="h-2/3 w-full p-3 flex flex-col justify-between" style="background-color: #8EA9B5;">
+                <div class="cinnabar-seal bg-white/90 text-[8px] px-1 py-0.5 rounded-sm self-end">汝窑</div>
+                <div class="vertical-text text-white font-serif text-lg tracking-widest text-center h-full flex items-center justify-center">天青</div>
+              </div>
+              <div class="p-3 flex-grow flex flex-col justify-between bg-white">
+                <span class="font-mono text-[9px] text-black/50">#8EA9B5</span>
+                <span class="font-serif text-[10px] text-black/60 leading-tight">雨过天青云破处</span>
+              </div>
+            </div>
+
+            <!-- Pillar 2: Cinnabar -->
+            <div onclick="previewClassicColor('C12C1F')" class="w-24 md:w-28 h-[95%] bg-white rounded-lg border border-black/5 shadow-lg flex flex-col overflow-hidden cursor-pointer hover:-translate-y-4 transition-all duration-500">
+              <div class="h-2/3 w-full p-3 flex flex-col justify-between" style="background-color: #C12C1F;">
+                <div class="cinnabar-seal bg-white/90 text-[8px] px-1 py-0.5 rounded-sm self-end">正色</div>
+                <div class="vertical-text text-white font-serif text-lg tracking-widest text-center h-full flex items-center justify-center">朱砂</div>
+              </div>
+              <div class="p-3 flex-grow flex flex-col justify-between bg-white">
+                <span class="font-mono text-[9px] text-black/50">#C12C1F</span>
+                <span class="font-serif text-[10px] text-black/60 leading-tight">千载华彩不褪色</span>
+              </div>
+            </div>
+
+            <!-- Pillar 3: Bamboo -->
+            <div onclick="previewClassicColor('789262')" class="w-24 md:w-28 h-[80%] bg-white rounded-lg border border-black/5 shadow-md flex flex-col overflow-hidden cursor-pointer hover:-translate-y-4 transition-all duration-500">
+              <div class="h-2/3 w-full p-3 flex flex-col justify-between" style="background-color: #789262;">
+                <div class="cinnabar-seal bg-white/90 text-[8px] px-1 py-0.5 rounded-sm self-end">君子</div>
+                <div class="vertical-text text-white font-serif text-lg tracking-widest text-center h-full flex items-center justify-center">竹青</div>
+              </div>
+              <div class="p-3 flex-grow flex flex-col justify-between bg-white">
+                <span class="font-mono text-[9px] text-black/50">#789262</span>
+                <span class="font-serif text-[10px] text-black/60 leading-tight">修竹新梢雨初后</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Philosophy Grid -->
+      <div class="space-y-6 pt-8">
+        <div class="text-center max-w-xl mx-auto space-y-2">
+          <h3 class="font-serif text-2xl tracking-widest text-charcoal">五色正统之玄奥</h3>
+          <p class="text-xs text-charcoal/50 uppercase tracking-widest font-mono">The Philosophy of Five Primary Colors</p>
+          <div class="w-12 h-[1px] bg-cinnabar mx-auto my-3"></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <!-- Blue-green (Qing) -->
+          <div class="bg-white border border-black/5 p-5 rounded-xl space-y-4 flex flex-col justify-between hover:shadow-md transition-all duration-300">
+            <div class="h-12 w-full rounded" style="background-color: #1661AB;"></div>
+            <div>
+              <h4 class="font-serif text-base font-bold text-charcoal">青 (青碧)</h4>
+              <p class="text-[11px] text-charcoal/60 mt-1 leading-relaxed font-serif">东方之色，属木。如碧潭修竹，主万物萌生、朝气洋溢之兆。</p>
+            </div>
+          </div>
+          <!-- Red (Chi) -->
+          <div class="bg-white border border-black/5 p-5 rounded-xl space-y-4 flex flex-col justify-between hover:shadow-md transition-all duration-300">
+            <div class="h-12 w-full rounded" style="background-color: #C12C1F;"></div>
+            <div>
+              <h4 class="font-serif text-base font-bold text-charcoal">赤 (赤红)</h4>
+              <p class="text-[11px] text-charcoal/60 mt-1 leading-relaxed font-serif">南方之色，属火。朱门红墙，烈火之华。象征尊贵与繁盛。</p>
+            </div>
+          </div>
+          <!-- Yellow (Huang) -->
+          <div class="bg-white border border-black/5 p-5 rounded-xl space-y-4 flex flex-col justify-between hover:shadow-md transition-all duration-300">
+            <div class="h-12 w-full rounded" style="background-color: #FFD111;"></div>
+            <div>
+              <h4 class="font-serif text-base font-bold text-charcoal">黄 (金黄)</h4>
+              <p class="text-[11px] text-charcoal/60 mt

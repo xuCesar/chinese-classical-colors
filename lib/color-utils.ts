@@ -8,7 +8,7 @@ import {
 } from "culori";
 
 import { colorSeeds } from "@/data/color-seeds";
-import type { ColorSeed, GeneratedColor, GeneratedScale, ScaleStep } from "@/lib/types";
+import type { ColorSeed, GeneratedColor, GeneratedScale, ScaleGenerationOptions, ScaleStep } from "@/lib/types";
 
 const toOklch = converter("oklch");
 const difference = differenceEuclidean("oklch");
@@ -57,6 +57,11 @@ const roleByStep: Record<ScaleStep, string> = {
   950: "墨色"
 };
 
+const defaultScaleOptions: Required<ScaleGenerationOptions> = {
+  lightnessShift: 0,
+  chromaScale: 1
+};
+
 export function normalizeHex(input: string): string | null {
   const trimmed = input.trim().replace(/^#/, "");
 
@@ -92,7 +97,11 @@ export function findNearbySeeds(hex: string, excludeId?: string, limit = 5): Col
     .slice(0, limit);
 }
 
-export function generateScale(inputHex: string, seedOverride?: ColorSeed): GeneratedScale {
+export function generateScale(
+  inputHex: string,
+  seedOverride?: ColorSeed,
+  options: ScaleGenerationOptions = {}
+): GeneratedScale {
   const normalizedHex = normalizeHex(inputHex);
 
   if (!normalizedHex) {
@@ -107,14 +116,18 @@ export function generateScale(inputHex: string, seedOverride?: ColorSeed): Gener
   }
 
   const baseSeed = seedOverride ?? findNearestSeed(normalizedHex);
+  const resolvedOptions = {
+    lightnessShift: clampNumber(options.lightnessShift ?? defaultScaleOptions.lightnessShift, -0.08, 0.08),
+    chromaScale: clampNumber(options.chromaScale ?? defaultScaleOptions.chromaScale, 0.65, 1.35)
+  };
   const baseChroma = Math.max(baseOklch.c ?? 0.02, 0.02);
   const hue = baseOklch.h ?? toOklch(baseSeed.hex)?.h ?? 0;
 
   const colors: GeneratedColor[] = scaleSteps.map((step) => {
     const color = clampRgb({
       mode: "oklch",
-      l: lightnessByStep[step],
-      c: baseChroma * chromaFactorByStep[step],
+      l: clampNumber(lightnessByStep[step] + resolvedOptions.lightnessShift, 0.08, 0.995),
+      c: baseChroma * chromaFactorByStep[step] * resolvedOptions.chromaScale,
       h: hue
     });
     const hex = formatHex(color);
@@ -131,10 +144,15 @@ export function generateScale(inputHex: string, seedOverride?: ColorSeed): Gener
     id: crypto.randomUUID(),
     baseHex: normalizedHex,
     baseSeed,
+    options: resolvedOptions,
     colors,
     nearbySeeds: findNearbySeeds(normalizedHex, baseSeed.id),
     createdAt: new Date().toISOString()
   };
+}
+
+function clampNumber(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
 }
 
 export function getScaleColor(scale: GeneratedScale, step: ScaleStep): GeneratedColor {

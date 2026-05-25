@@ -1,0 +1,2243 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>中国传统色 — 东方禅意交互色谱与设计指南</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            cinnabar: "#C12C1F",
+                            gold: "#D4AF37",
+                            charcoal: "#2B2B2B",
+                            paper: "#FAF8F5",
+                            inkline: "rgba(43,43,43,0.08)",
+                        },
+                        boxShadow: {
+                            ink: "0 16px 28px rgba(43,43,43,0.06)",
+                            seal: "inset 0 0 4px rgba(193,44,31,0.12), 0 2px 6px rgba(193,44,31,0.08)",
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            :root {
+                --bg-paper: oklch(98% 0.005 85);
+                --bg-surface: #ffffff;
+                --fg-ink: oklch(18% 0.01 70);
+                --fg-muted: oklch(45% 0.008 70);
+                --border-ink: oklch(20% 0.01 70 / 8%);
+                --border-ink-active: oklch(20% 0.01 70 / 24%);
+                --accent-cinnabar: oklch(50% 0.18 30);
+                --accent-gold: oklch(78% 0.12 85);
+                --transition-ease: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+                --font-display:
+                    "STSong", "Songti SC", "SimSun", "Noto Serif CJK SC", serif;
+                --font-mono:
+                    "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+                --font-sans:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, sans-serif;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                font-family: var(--font-sans);
+                color: var(--fg-ink);
+                background: var(--bg-paper);
+                overflow-x: hidden;
+            }
+            .rice-paper {
+                background-color: var(--bg-paper);
+                background-image:
+                    radial-gradient(
+                        oklch(20% 0.01 70 / 4%) 1.2px,
+                        transparent 0
+                    ),
+                    radial-gradient(
+                        oklch(20% 0.01 70 / 4%) 1.2px,
+                        transparent 0
+                    );
+                background-size: 32px 32px;
+                background-position:
+                    0 0,
+                    16px 16px;
+                position: relative;
+            }
+            .rice-paper::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                opacity: 0.04;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            }
+            .vertical-text {
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                font-family: var(--font-display);
+            }
+            .cinnabar-seal {
+                border: 2px solid #c12c1f;
+                color: #c12c1f;
+                font-family: var(--font-display);
+                writing-mode: vertical-rl;
+                line-height: 1.1;
+                letter-spacing: 0.1em;
+                text-align: center;
+                box-shadow:
+                    inset 0 0 4px rgba(193, 44, 31, 0.12),
+                    0 2px 6px rgba(193, 44, 31, 0.08);
+                background: radial-gradient(
+                    circle,
+                    rgba(250, 248, 245, 0.86) 0%,
+                    rgba(250, 248, 245, 0.45) 100%
+                );
+                position: relative;
+            }
+            .cinnabar-seal::before {
+                content: "";
+                position: absolute;
+                inset: 1px;
+                border: 1px dashed rgba(193, 44, 31, 0.45);
+            }
+            .view-panel {
+                display: none;
+                animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            .view-panel.active {
+                display: block;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .nav-btn-active {
+                color: #c12c1f !important;
+                font-weight: 600;
+            }
+            .nav-btn-active::after {
+                content: "";
+                position: absolute;
+                left: 15%;
+                width: 70%;
+                bottom: -6px;
+                height: 2px;
+                background: #c12c1f;
+            }
+            .color-rod-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+                gap: 1.35rem 0.8rem;
+            }
+            .color-rod {
+                background: #fff;
+                border: 1px solid rgba(43, 43, 43, 0.06);
+                border-radius: 4px;
+                overflow: hidden;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                height: 330px;
+                transition: var(--transition-ease);
+            }
+            .color-rod:hover {
+                transform: translateY(-8px);
+                border-color: rgba(43, 43, 43, 0.18);
+                box-shadow: 0 16px 28px rgba(43, 43, 43, 0.06);
+            }
+            .spec-card {
+                background: #fff;
+                border: 1px solid rgba(43, 43, 43, 0.06);
+                border-radius: 1rem;
+                box-shadow: 0 6px 18px rgba(43, 43, 43, 0.03);
+            }
+            .specimen-grid {
+                background-image:
+                    linear-gradient(
+                        rgba(43, 43, 43, 0.05) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(43, 43, 43, 0.05) 1px,
+                        transparent 1px
+                    );
+                background-size: 20px 20px;
+            }
+            .bottom-sheet {
+                position: fixed;
+                inset: auto 0 0 0;
+                background: #fff;
+                border-radius: 24px 24px 0 0;
+                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12);
+                transform: translateY(101%);
+                transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 100;
+                max-height: 85vh;
+            }
+            .bottom-sheet.open {
+                transform: translateY(0);
+            }
+            .sheet-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.36);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                z-index: 90;
+            }
+            .sheet-backdrop.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .toast-msg {
+                position: fixed;
+                bottom: 24px;
+                left: 50%;
+                transform: translate(-50%, 40px);
+                background: var(--fg-ink);
+                color: var(--bg-paper);
+                padding: 0.75rem 1.2rem;
+                border-radius: 999px;
+                font-size: 0.85rem;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 150;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+            .toast-msg.show {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+            @keyframes audioWave {
+                0%,
+                100% {
+                    height: 4px;
+                }
+                50% {
+                    height: 20px;
+                }
+            }
+            .wave-bar {
+                width: 3px;
+                background: #c12c1f;
+                border-radius: 1px;
+            }
+            .wave-bar.playing {
+                animation: audioWave 1s ease-in-out infinite;
+            }
+            .code-pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+            @media (max-width: 768px) {
+                .color-rod-grid {
+                    grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+                    gap: 0.9rem 0.55rem;
+                }
+                .color-rod {
+                    height: 288px;
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="rice-paper min-h-screen flex flex-col selection:bg-cinnabar selection:text-white"
+    >
+        <header
+            class="sticky top-0 z-50 bg-[#faf8f5]/90 backdrop-blur-md border-b border-black/5"
+        >
+            <div
+                class="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between"
+            >
+                <a
+                    href="#"
+                    onclick="
+                        switchView('explorer');
+                        return false;
+                    "
+                    class="flex items-center gap-3"
+                >
+                    <div
+                        class="cinnabar-seal w-9 h-9 flex items-center justify-center font-bold text-sm rounded-sm"
+                    >
+                        开物
+                    </div>
+                    <div class="leading-none">
+                        <h1
+                            class="font-serif font-bold text-lg tracking-widest text-charcoal"
+                        >
+                            中国传统色
+                        </h1>
+                        <p
+                            class="text-[9px] font-mono tracking-wider text-black/40 uppercase mt-0.5"
+                        >
+                            Zen Color Spec &amp; App
+                        </p>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-8 relative">
+                    <button
+                        onclick="switchView('explorer')"
+                        class="nav-btn-tab nav-btn-active font-serif py-1 text-charcoal/60 hover:text-cinnabar transition-all duration-300 relative text-sm tracking-widest"
+                        id="tab-explorer"
+                    >
+                        天工开物
+                    </button>
+                    <button
+                        onclick="switchView('exporter')"
+                        class="nav-btn-tab font-serif py-1 text-charcoal/60 hover:text-cinnabar transition-all duration-300 relative text-sm tracking-widest"
+                        id="tab-exporter"
+                    >
+                        画轴印制
+                    </button>
+                    <button
+                        onclick="switchView('spec')"
+                        class="nav-btn-tab font-serif py-1 text-charcoal/60 hover:text-cinnabar transition-all duration-300 relative text-sm tracking-widest"
+                        id="tab-spec"
+                    >
+                        设计指南
+                    </button>
+                </nav>
+
+                <button
+                    onclick="openPaletteDrawer()"
+                    class="relative border border-black/10 hover:border-cinnabar px-4 py-1.5 rounded-full text-xs font-serif text-charcoal hover:text-cinnabar bg-white/50 backdrop-blur-sm transition-all duration-300 flex items-center gap-2"
+                >
+                    <i class="fa-solid fa-feather-pointed"></i>
+                    <span>采色袋</span>
+                    <span
+                        id="bag-count"
+                        class="bg-cinnabar text-white rounded-full min-w-[18px] h-[18px] inline-flex items-center justify-center text-[9px] font-sans px-1"
+                        >0</span
+                    >
+                </button>
+            </div>
+        </header>
+
+        <div
+            class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-sm bg-white/95 backdrop-blur-lg border border-black/10 rounded-full py-2.5 px-6 shadow-xl flex justify-around text-charcoal/60"
+        >
+            <button
+                onclick="switchView('explorer')"
+                class="mobile-nav-item flex flex-col items-center gap-1 font-serif text-[10px] text-cinnabar"
+                id="m-tab-explorer"
+            >
+                <i class="fa-solid fa-palette text-base"></i><span>色谱</span>
+            </button>
+            <button
+                onclick="switchView('exporter')"
+                class="mobile-nav-item flex flex-col items-center gap-1 font-serif text-[10px]"
+                id="m-tab-exporter"
+            >
+                <i class="fa-solid fa-scroll text-base"></i><span>印制</span>
+            </button>
+            <button
+                onclick="switchView('spec')"
+                class="mobile-nav-item flex flex-col items-center gap-1 font-serif text-[10px]"
+                id="m-tab-spec"
+            >
+                <i class="fa-solid fa-compass text-base"></i><span>指南</span>
+            </button>
+        </div>
+
+        <main
+            class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 py-8 pb-28 md:pb-12"
+        >
+            <section id="view-explorer" class="view-panel active space-y-6">
+                <div
+                    class="flex flex-col md:flex-row gap-4 items-center justify-between border-b border-black/5 pb-4"
+                >
+                    <div>
+                        <h3
+                            class="font-serif text-2xl text-charcoal tracking-widest"
+                        >
+                            天工开物
+                        </h3>
+                        <p class="text-xs text-charcoal/50 font-mono mt-0.5">
+                            Classic Chromatic Catalog / 传统色彩探索器
+                        </p>
+                    </div>
+                    <div class="relative w-full md:w-80">
+                        <input
+                            type="text"
+                            id="search-input"
+                            oninput="filterColors()"
+                            placeholder="搜索雅色汉字 / 拼音 / HEX..."
+                            class="w-full bg-white border border-black/10 text-charcoal pl-10 pr-4 py-2 rounded-full text-xs outline-none focus:border-cinnabar transition-all"
+                        />
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-charcoal/40 text-xs"
+                        ></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <aside
+                        class="lg:col-span-3 space-y-6 lg:sticky lg:top-24 h-fit"
+                    >
+                        <div class="spec-card p-5 space-y-3">
+                            <h4
+                                class="font-serif text-xs font-bold text-charcoal flex justify-between items-center border-b border-black/5 pb-2"
+                            >
+                                <span>按朝代风雅</span
+                                ><i
+                                    class="fa-solid fa-monument text-xs text-black/30"
+                                ></i>
+                            </h4>
+                            <div
+                                class="flex flex-wrap gap-2"
+                                id="dynasty-filter-chips"
+                            >
+                                <button
+                                    onclick="setDynastyFilter('all')"
+                                    class="px-3 py-1 rounded-full text-[11px] border border-black/10 bg-cinnabar text-white"
+                                    id="dyn-all"
+                                >
+                                    全部
+                                </button>
+                                <button
+                                    onclick="setDynastyFilter('周朝')"
+                                    class="px-3 py-1 rounded-full text-[11px] border border-black/10 bg-white hover:border-cinnabar transition-all"
+                                    id="dyn-周朝"
+                                >
+                                    周朝
+                                </button>
+                                <button
+                                    onclick="setDynastyFilter('秦汉')"
+                                    class="px-3 py-1 rounded-full text-[11px] border border-black/10 bg-white hover:border-cinnabar transition-all"
+                                    id="dyn-秦汉"
+                                >
+                                    秦汉
+                                </button>
+                                <button
+                                    onclick="setDynastyFilter('唐朝')"
+                                    class="px-3 py-1 rounded-full text-[11px] border border-black/10 bg-white hover:border-cinnabar transition-all"
+                                    id="dyn-唐朝"
+                                >
+                                    唐朝
+                                </button>
+                                <button
+                                    onclick="setDynastyFilter('宋朝')"
+                                    class="px-3 py-1 rounded-full text-[11px] border border-black/10 bg-white hover:border-cinnabar transition-all"
+                                    id="dyn-宋朝"
+                                >
+                                    宋朝
+                                </button>
+                                <button
+                                    onclick="setDynastyFilter('明清')"
+                                    class="px-3 py-1 rounded-full text-[11px] border border-black/10 bg-white hover:border-cinnabar transition-all"
+                                    id="dyn-明清"
+                                >
+                                    明清
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="spec-card p-5 space-y-3">
+                            <h4
+                                class="font-serif text-xs font-bold text-charcoal flex justify-between items-center border-b border-black/5 pb-2"
+                            >
+                                <span>按五正色谱</span
+                                ><i
+                                    class="fa-solid fa-shapes text-xs text-black/30"
+                                ></i>
+                            </h4>
+                            <div
+                                class="grid grid-cols-3 gap-2"
+                                id="hue-filter-chips"
+                            >
+                                <button
+                                    onclick="setHueFilter('all')"
+                                    class="px-2 py-1.5 text-xs rounded border border-cinnabar bg-cinnabar/5 text-cinnabar text-center"
+                                    id="hue-all"
+                                >
+                                    全部
+                                </button>
+                                <button
+                                    onclick="setHueFilter('赤')"
+                                    class="px-2 py-1.5 text-xs rounded border border-black/10 hover:border-cinnabar text-center"
+                                    id="hue-赤"
+                                >
+                                    赤红
+                                </button>
+                                <button
+                                    onclick="setHueFilter('黄')"
+                                    class="px-2 py-1.5 text-xs rounded border border-black/10 hover:border-cinnabar text-center"
+                                    id="hue-黄"
+                                >
+                                    金黄
+                                </button>
+                                <button
+                                    onclick="setHueFilter('青')"
+                                    class="px-2 py-1.5 text-xs rounded border border-black/10 hover:border-cinnabar text-center"
+                                    id="hue-青"
+                                >
+                                    青碧
+                                </button>
+                                <button
+                                    onclick="setHueFilter('白')"
+                                    class="px-2 py-1.5 text-xs rounded border border-black/10 hover:border-cinnabar text-center"
+                                    id="hue-白"
+                                >
+                                    素白
+                                </button>
+                                <button
+                                    onclick="setHueFilter('黑')"
+                                    class="px-2 py-1.5 text-xs rounded border border-black/10 hover:border-cinnabar text-center"
+                                    id="hue-黑"
+                                >
+                                    玄黑
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="hidden lg:block bg-[#FAF8F5]/80 border border-black/5 p-4 rounded-xl font-serif text-[11px] text-charcoal/60 leading-relaxed"
+                        >
+                            <p class="font-bold text-charcoal">五正色记</p>
+                            <p class="mt-1">
+                                东方谓之青，南方谓之赤，西方谓之白，北方谓之黑，天谓之玄，地谓之黄。
+                            </p>
+                        </div>
+                    </aside>
+
+                    <div class="lg:col-span-9">
+                        <div
+                            class="flex items-center justify-between mb-4 text-xs text-charcoal/50 font-mono"
+                        >
+                            <span>VISIBLE COLORS</span>
+                            <span id="visible-count">0 项</span>
+                        </div>
+                        <div
+                            id="colors-grid-container"
+                            class="color-rod-grid"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-exporter" class="view-panel space-y-8">
+                <div class="border-b border-black/5 pb-4">
+                    <h3
+                        class="font-serif text-2xl text-charcoal tracking-widest"
+                    >
+                        画轴印制
+                    </h3>
+                    <p class="text-xs text-charcoal/50 font-mono mt-0.5">
+                        Interactive Hanging Poster Scroll &amp; Developer
+                        Exporter
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div
+                        class="lg:col-span-5 flex flex-col items-center justify-center bg-white/40 border border-black/5 p-6 md:p-10 rounded-2xl"
+                    >
+                        <div
+                            id="poster-element"
+                            class="w-full max-w-[340px] aspect-[3/4.5] bg-[#FAF8F5] p-5 shadow-2xl relative flex flex-col justify-between border border-black/10 transition-all duration-300"
+                        >
+                            <div
+                                class="absolute -top-3 left-1/2 -translate-x-1/2 w-[104%] h-2.5 bg-yellow-950 rounded-sm shadow-md"
+                            ></div>
+                            <div
+                                class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-[104%] h-3.5 bg-yellow-950 rounded shadow-md"
+                            ></div>
+
+                            <div
+                                class="flex justify-between items-start border-b border-black/5 pb-4"
+                            >
+                                <div class="leading-none">
+                                    <span
+                                        class="font-mono text-[9px] text-black/30 block uppercase"
+                                        >CHINESE AESTHETIC</span
+                                    >
+                                    <span
+                                        class="font-serif text-xs text-black/50 block mt-1"
+                                        id="poster-dynasty-badge"
+                                        >宋朝风雅</span
+                                    >
+                                </div>
+                                <div
+                                    id="poster-seal-view"
+                                    class="cinnabar-seal w-8 h-8 flex items-center justify-center font-bold text-xs rounded-sm"
+                                >
+                                    雅赏
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex-grow flex items-center justify-around py-8"
+                            >
+                                <div
+                                    class="vertical-text text-5xl font-serif tracking-widest text-charcoal h-full flex items-center justify-center"
+                                    id="poster-name-view"
+                                >
+                                    天青
+                                </div>
+                                <div
+                                    class="flex flex-col items-center justify-center gap-6"
+                                >
+                                    <div
+                                        id="poster-color-circle"
+                                        class="w-20 h-20 rounded-full border-4 border-white shadow-xl transition-all duration-500"
+                                        style="background-color: #8ea9b5"
+                                    ></div>
+                                    <div
+                                        class="vertical-text text-xs text-charcoal/60 font-serif leading-relaxed h-32 overflow-hidden text-center"
+                                        id="poster-poem-view"
+                                    >
+                                        雨过天青云破处，这般颜色做将来。
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="border-t border-black/5 pt-4 flex justify-between items-center font-mono text-[10px] text-charcoal/50"
+                            >
+                                <div class="space-y-0.5">
+                                    <div>
+                                        HEX:
+                                        <span
+                                            id="poster-hex-view"
+                                            class="text-charcoal"
+                                            >#8EA9B5</span
+                                        >
+                                    </div>
+                                    <div>
+                                        PINYIN:
+                                        <span
+                                            id="poster-pinyin-view"
+                                            class="text-charcoal"
+                                            >tiān qīng</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span
+                                        class="text-[8px] bg-black/5 px-2 py-0.5 rounded text-black/50"
+                                        >中华传统色</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="spec-card p-6 space-y-4">
+                            <h4
+                                class="font-serif text-lg font-bold text-charcoal flex justify-between items-center"
+                            >
+                                <span>海报装裱参数</span
+                                ><i
+                                    class="fa-solid fa-sliders text-xs text-black/30"
+                                ></i>
+                            </h4>
+
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs"
+                            >
+                                <div class="space-y-2">
+                                    <label class="font-serif text-charcoal/60"
+                                        >刻写朱砂印章</label
+                                    >
+                                    <div class="flex gap-2">
+                                        <input
+                                            type="text"
+                                            id="seal-custom-input"
+                                            value="雅赏"
+                                            class="bg-paper border border-black/10 px-3 py-2 rounded focus:outline-none focus:border-cinnabar flex-grow"
+                                        />
+                                        <button
+                                            onclick="updatePosterSeal()"
+                                            class="bg-cinnabar text-white font-serif px-4 py-2 rounded text-xs hover:bg-red-800 transition-all"
+                                        >
+                                            重刻
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="font-serif text-charcoal/60"
+                                        >从采色袋选择主色</label
+                                    >
+                                    <select
+                                        id="bag-color-select"
+                                        onchange="loadColorToPoster(this.value)"
+                                        class="w-full bg-paper border border-black/10 px-3 py-2 rounded text-xs focus:outline-none focus:border-cinnabar"
+                                    >
+                                        <option value="">
+                                            -- 空空如也（请先采色）--
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="spec-card p-6 space-y-4">
+                            <div
+                                class="flex justify-between items-center border-b border-black/5 pb-3"
+                            >
+                                <h4
+                                    class="font-serif text-base font-bold text-charcoal"
+                                >
+                                    开发者代码输出
+                                </h4>
+                                <div class="flex gap-2 font-mono text-[10px]">
+                                    <button
+                                        onclick="showCodeFormat('css')"
+                                        id="btn-fmt-css"
+                                        class="px-2 py-1 bg-cinnabar text-white rounded"
+                                    >
+                                        CSS
+                                    </button>
+                                    <button
+                                        onclick="showCodeFormat('tailwind')"
+                                        id="btn-fmt-tailwind"
+                                        class="px-2 py-1 bg-black/5 text-charcoal rounded"
+                                    >
+                                        Tailwind
+                                    </button>
+                                    <button
+                                        onclick="showCodeFormat('json')"
+                                        id="btn-fmt-json"
+                                        class="px-2 py-1 bg-black/5 text-charcoal rounded"
+                                    >
+                                        JSON
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                class="relative bg-[#f5f3ef] border border-black/5 rounded-xl p-4"
+                            >
+                                <button
+                                    onclick="copyCodeOutput()"
+                                    class="absolute top-3 right-3 text-black/35 hover:text-cinnabar transition-all"
+                                >
+                                    <i class="fa-regular fa-clone"></i>
+                                </button>
+                                <pre
+                                    id="code-output"
+                                    class="code-pre text-[11px] leading-relaxed font-mono text-charcoal/80"
+                                ></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-spec" class="view-panel space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <aside
+                        class="lg:col-span-3 lg:sticky lg:top-24 h-fit space-y-4"
+                    >
+                        <div class="spec-card p-5 space-y-3">
+                            <p
+                                class="text-[10px] font-mono tracking-widest text-cinnabar font-bold"
+                            >
+                                SPECIFICATION INDEX
+                            </p>
+                            <nav
+                                class="flex flex-col gap-1 font-serif text-sm text-charcoal/70"
+                            >
+                                <a
+                                    href="#spec-philosophy"
+                                    class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"
+                                    ><span class="font-mono text-xs opacity-50"
+                                        >01.</span
+                                    >
+                                    美学哲学</a
+                                >
+                                <a
+                                    href="#spec-colors"
+                                    class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"
+                                    ><span class="font-mono text-xs opacity-50"
+                                        >02.</span
+                                    >
+                                    色彩系统</a
+                                >
+                                <a
+                                    href="#spec-type"
+                                    class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"
+                                    ><span class="font-mono text-xs opacity-50"
+                                        >03.</span
+                                    >
+                                    字体与章法</a
+                                >
+                                <a
+                                    href="#spec-components"
+                                    class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"
+                                    ><span class="font-mono text-xs opacity-50"
+                                        >04.</span
+                                    >
+                                    核心组件 Spec</a
+                                >
+                                <a
+                                    href="#spec-spacing"
+                                    class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2 border-b border-black/5"
+                                    ><span class="font-mono text-xs opacity-50"
+                                        >05.</span
+                                    >
+                                    间距与边框</a
+                                >
+                                <a
+                                    href="#spec-mobile"
+                                    class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2"
+                                    ><span class="font-mono text-xs opacity-50"
+                                        >06.</span
+                                    >
+                                    移动端规则</a
+                                >
+                                <a
+                                    href="#section-interaction"
+                                    class="hover:text-cinnabar py-1.5 transition-all flex items-center gap-2"
+                                    ><span class="font-mono text-xs opacity-50"
+                                        >07.</span
+                                    >
+                                    触觉交互规范</a
+                                >
+                            </nav>
+                        </div>
+
+                        <div class="spec-card p-5 space-y-2">
+                            <h4
+                                class="font-serif text-xs font-bold text-charcoal flex items-center gap-2"
+                            >
+                                <i
+                                    class="fa-solid fa-seedling text-cinnabar"
+                                ></i
+                                ><span>核心姿态</span>
+                            </h4>
+                            <p
+                                class="text-[11px] text-charcoal/60 leading-relaxed font-serif"
+                            >
+                                用现代精确网格承载古典意味。背景温润，前景克制，朱砂只在关键处落印。
+                            </p>
+                        </div>
+                    </aside>
+
+                    <div class="lg:col-span-9 space-y-8">
+                        <section
+                            id="spec-philosophy"
+                            class="spec-card p-6 md:p-8 space-y-5"
+                        >
+                            <div
+                                class="flex items-center gap-3 border-b border-black/5 pb-4"
+                            >
+                                <span
+                                    class="font-mono text-2xl text-cinnabar/30"
+                                    >01/</span
+                                >
+                                <h2 class="font-serif text-2xl tracking-wider">
+                                    东方禅意之美学心法
+                                </h2>
+                            </div>
+                            <p
+                                class="text-sm font-serif text-charcoal/70 leading-relaxed"
+                            >
+                                这一风格的关键不在“古风元素堆砌”，而在于以现代界面的秩序感、信息密度与可操作性，去承载东方留白、器物感与章法感。
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <h4
+                                        class="font-serif font-bold flex items-center gap-2"
+                                    >
+                                        <span
+                                            class="w-2 h-2 rounded-full bg-cinnabar"
+                                        ></span
+                                        >简· 拒绝多余雕饰
+                                    </h4>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        不使用大面积多色渐变，不采用生硬的强投影或多层描边。通过极其纤细的墨线（1px）与纯净的留白建立边界。
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <h4
+                                        class="font-serif font-bold flex items-center gap-2"
+                                    >
+                                        <span
+                                            class="w-2 h-2 rounded-full bg-cinnabar"
+                                        ></span
+                                        >远 · 意境深远留白
+                                    </h4>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        页面的纵向间距、文字与容器边距，必须比常规后台管理页面宽
+                                        1.5 倍以上。给眼睛呼吸与冥想的空间
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <h4
+                                        class="font-serif font-bold flex items-center gap-2"
+                                    >
+                                        <span
+                                            class="w-2 h-2 rounded-full bg-cinnabar"
+                                        ></span
+                                        >凝 · 精准的朱砂锚点
+                                    </h4>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        在一个视觉层级中，高纯度的朱砂红（Cinnabar
+                                        Seal）至多出现两次。如古画中的红色落款，是极静空间中的一声钟鸣。
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <h4
+                                        class="font-serif font-bold flex items-center gap-2"
+                                    >
+                                        <span
+                                            class="w-2 h-2 rounded-full bg-cinnabar"
+                                        ></span
+                                        >润 · 润物细无声
+                                    </h4>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        交互变化不使用唐突的弹跳或极快的瞬间切换，而是使用
+                                        400ms 至 500ms 的缓入缓出过渡（Cubic
+                                        Bezier），如墨入水。
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section
+                            id="spec-colors"
+                            class="spec-card p-6 md:p-8 space-y-5"
+                        >
+                            <div
+                                class="flex items-center gap-3 border-b border-black/5 pb-4"
+                            >
+                                <span
+                                    class="font-mono text-2xl text-cinnabar/30"
+                                    >02/</span
+                                >
+                                <h2 class="font-serif text-2xl tracking-wider">
+                                    色彩系统
+                                </h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 flex gap-4 items-center"
+                                >
+                                    <div
+                                        class="w-12 h-12 rounded-full border border-black/10 bg-[#FAF8F5]"
+                                    ></div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between gap-3"
+                                        >
+                                            <span class="font-serif font-bold"
+                                                >宣纸素底</span
+                                            ><span
+                                                class="font-mono text-xs text-cinnabar"
+                                                >--bg-paper</span
+                                            >
+                                        </div>
+                                        <div
+                                            class="font-mono text-[11px] text-charcoal/50 mt-1"
+                                        >
+                                            oklch(98% 0.005 85) / #FAF8F5
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 flex gap-4 items-center"
+                                >
+                                    <div
+                                        class="w-12 h-12 rounded-full border border-black/10 bg-[#2B2B2B]"
+                                    ></div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between gap-3"
+                                        >
+                                            <span class="font-serif font-bold"
+                                                >墨色前景</span
+                                            ><span
+                                                class="font-mono text-xs text-cinnabar"
+                                                >--fg-ink</span
+                                            >
+                                        </div>
+                                        <div
+                                            class="font-mono text-[11px] text-charcoal/50 mt-1"
+                                        >
+                                            oklch(18% 0.01 70) / #2B2B2B
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 flex gap-4 items-center"
+                                >
+                                    <div
+                                        class="w-12 h-12 rounded-full border border-black/10 bg-[#C12C1F]"
+                                    ></div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between gap-3"
+                                        >
+                                            <span class="font-serif font-bold"
+                                                >朱砂强调</span
+                                            ><span
+                                                class="font-mono text-xs text-cinnabar"
+                                                >--accent-cinnabar</span
+                                            >
+                                        </div>
+                                        <div
+                                            class="font-mono text-[11px] text-charcoal/50 mt-1"
+                                        >
+                                            oklch(50% 0.18 30) / #C12C1F
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 flex gap-4 items-center"
+                                >
+                                    <div
+                                        class="w-12 h-12 rounded-full border border-black/10 bg-[#D4AF37]"
+                                    ></div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between gap-3"
+                                        >
+                                            <span class="font-serif font-bold"
+                                                >描金辅助</span
+                                            ><span
+                                                class="font-mono text-xs text-cinnabar"
+                                                >--accent-gold</span
+                                            >
+                                        </div>
+                                        <div
+                                            class="font-mono text-[11px] text-charcoal/50 mt-1"
+                                        >
+                                            oklch(78% 0.12 85) / #D4AF37
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="relative bg-[#f5f3ef] border border-black/5 rounded-xl p-4"
+                            >
+                                <button
+                                    onclick="
+                                        copyById(
+                                            'root-css-code',
+                                            'CSS变量已复制',
+                                        )
+                                    "
+                                    class="absolute top-3 right-3 text-black/35 hover:text-cinnabar transition-all"
+                                >
+                                    <i class="fa-regular fa-clone"></i>
+                                </button>
+                                <pre
+                                    id="root-css-code"
+                                    class="font-mono text-[11px] text-charcoal/80 code-pre"
+                                >
+:root {
+  --bg-paper: oklch(98% 0.005 85);
+  --fg-ink: oklch(18% 0.01 70);
+  --accent-cinnabar: oklch(50% 0.18 30);
+  --accent-gold: oklch(78% 0.12 85);
+  --border-ink: oklch(20% 0.01 70 / 8%);
+}</pre
+                                >
+                            </div>
+                        </section>
+
+                        <section
+                            id="spec-type"
+                            class="spec-card p-6 md:p-8 space-y-5"
+                        >
+                            <div
+                                class="flex items-center gap-3 border-b border-black/5 pb-4"
+                            >
+                                <span
+                                    class="font-mono text-2xl text-cinnabar/30"
+                                    >03/</span
+                                >
+                                <h2 class="font-serif text-2xl tracking-wider">
+                                    字体与章法
+                                </h2>
+                            </div>
+                            <div
+                                class="specimen-grid border border-black/5 rounded-xl p-6"
+                            >
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-12 gap-8"
+                                >
+                                    <div
+                                        class="md:col-span-5 flex justify-center items-center py-4 bg-[#faf8f5]/60 border border-black/5 rounded-lg"
+                                    >
+                                        <div class="flex gap-4">
+                                            <div
+                                                class="vertical-text text-3xl font-serif text-charcoal tracking-widest leading-loose"
+                                            >
+                                                修竹凝妆<br /><span
+                                                    class="text-cinnabar"
+                                                    >一树梅花</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="vertical-text text-xs text-charcoal/50 tracking-widest mt-6"
+                                            >
+                                                宋代用色风雅意气
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="md:col-span-7 flex flex-col justify-center gap-4"
+                                    >
+                                        <div
+                                            class="border-l-2 border-cinnabar pl-3"
+                                        >
+                                            <div
+                                                class="text-[10px] font-mono uppercase tracking-widest text-black/40"
+                                            >
+                                                DISPLAY / 中文展示字体
+                                            </div>
+                                            <div
+                                                class="font-serif text-base mt-1"
+                                            >
+                                                STSong / Songti SC / SimSun /
+                                                Noto Serif CJK SC
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="border-l-2 border-black/15 pl-3"
+                                        >
+                                            <div
+                                                class="text-[10px] font-mono uppercase tracking-widest text-black/40"
+                                            >
+                                                MONO / 参数与代码
+                                            </div>
+                                            <div class="font-mono text-xs mt-1">
+                                                JetBrains Mono / SF Mono /
+                                                ui-monospace
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="border-l-2 border-black/15 pl-3"
+                                        >
+                                            <div
+                                                class="text-[10px] font-mono uppercase tracking-widest text-black/40"
+                                            >
+                                                推荐尺度
+                                            </div>
+                                            <div
+                                                class="text-xs text-charcoal/60 font-serif mt-1"
+                                            >
+                                                正文 14–16px；说明
+                                                11–13px；展示标题 28px
+                                                起；竖排题签字距 0.12em–0.18em。
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section
+                            id="spec-components"
+                            class="spec-card p-6 md:p-8 space-y-6"
+                        >
+                            <div
+                                class="flex items-center gap-3 border-b border-black/5 pb-4"
+                            >
+                                <span
+                                    class="font-mono text-2xl text-cinnabar/30"
+                                    >04/</span
+                                >
+                                <h2 class="font-serif text-2xl tracking-wider">
+                                    核心美学组件 Spec 及在线生成
+                                </h2>
+                            </div>
+                            <p
+                                class="text-sm font-serif text-charcoal/70 leading-relaxed"
+                            >
+                                这部分不是静态图例，而是可操作的组件工坊。每个组件都同时给出视觉结果、使用规则与可复制的工程代码。
+                            </p>
+
+                            <div
+                                class="border border-black/5 rounded-xl p-5 space-y-4"
+                            >
+                                <div
+                                    class="flex justify-between items-center border-b border-black/5 pb-3"
+                                >
+                                    <h4 class="font-serif text-sm font-bold">
+                                        1. 朱砂古法印章生成器
+                                    </h4>
+                                    <span
+                                        class="text-[10px] font-mono text-black/30"
+                                        >SEAL STAMP COMPONENT</span
+                                    >
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center"
+                                >
+                                    <div class="space-y-3">
+                                        <p
+                                            class="text-xs text-charcoal/60 leading-relaxed font-serif"
+                                        >
+                                            用于标题角标、作品归属、状态确认与精选标签。建议单屏最多使用
+                                            1–2 处，不应变成普通按钮色块。
+                                        </p>
+                                        <div class="flex gap-2">
+                                            <input
+                                                id="seal-text-input"
+                                                type="text"
+                                                maxlength="4"
+                                                value="雅赏"
+                                                class="bg-paper border border-black/10 text-xs px-3 py-2 rounded focus:outline-none focus:border-cinnabar flex-grow"
+                                                placeholder="输入 2~4 个汉字"
+                                            />
+                                            <button
+                                                onclick="updateSealDemo()"
+                                                class="bg-cinnabar text-white text-xs font-serif px-4 py-2 rounded hover:bg-red-800 transition-all"
+                                            >
+                                                刻印
+                                            </button>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button
+                                                onclick="copySealSnippet()"
+                                                class="border border-black/10 hover:border-cinnabar px-4 py-2 rounded text-xs font-serif transition-all"
+                                            >
+                                                复制 HTML
+                                            </button>
+                                            <button
+                                                onclick="copySealCss()"
+                                                class="border border-black/10 hover:border-cinnabar px-4 py-2 rounded text-xs font-serif transition-all"
+                                            >
+                                                复制 CSS
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex justify-center py-6 bg-[#faf8f5]/60 border border-black/5 rounded-lg"
+                                    >
+                                        <div
+                                            class="flex flex-col items-center gap-3"
+                                        >
+                                            <div
+                                                id="live-seal-preview"
+                                                class="cinnabar-seal w-16 h-16 flex items-center justify-center font-bold text-base rounded-sm"
+                                            >
+                                                雅赏
+                                            </div>
+                                            <span
+                                                class="text-[10px] font-mono text-black/40"
+                                                >推荐尺寸：32 / 40 / 56 /
+                                                64</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="border border-black/5 rounded-xl p-5 space-y-4"
+                            >
+                                <div
+                                    class="flex justify-between items-center border-b border-black/5 pb-3"
+                                >
+                                    <h4 class="font-serif text-sm font-bold">
+                                        2. 纵向色柱卡片规范
+                                    </h4>
+                                    <span
+                                        class="text-[10px] font-mono text-black/30"
+                                        >VERTICAL COLOR ROD</span
+                                    >
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 lg:grid-cols-12 gap-6"
+                                >
+                                    <div
+                                        class="lg:col-span-4 flex justify-center items-center bg-[#faf8f5]/60 border border-black/5 rounded-lg p-5"
+                                    >
+                                        <div
+                                            class="color-rod w-[108px] !h-[360px]"
+                                        >
+                                            <div
+                                                class="h-28 relative"
+                                                style="background: #8ea9b5"
+                                            >
+                                                <div
+                                                    class="absolute top-2 right-2 text-[8px] px-1 py-0.5 rounded-sm bg-white/85 font-serif text-cinnabar border border-cinnabar/20"
+                                                >
+                                                    汝窑
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex-1 flex items-center justify-center py-4"
+                                            >
+                                                <div
+                                                    class="vertical-text text-2xl tracking-[0.18em] text-charcoal"
+                                                >
+                                                    天青
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="border-t border-black/5 px-3 py-3 space-y-1"
+                                            >
+                                                <div
+                                                    class="text-[10px] font-mono text-black/40"
+                                                >
+                                                    #8EA9B5
+                                                </div>
+                                                <div
+                                                    class="text-[10px] font-serif text-charcoal/60 leading-relaxed"
+                                                >
+                                                    雨过天青云破处
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs"
+                                    >
+                                        <div
+                                            class="border border-black/5 rounded-lg p-4 space-y-2"
+                                        >
+                                            <div class="font-serif font-bold">
+                                                布局比例
+                                            </div>
+                                            <ul
+                                                class="space-y-1 text-charcoal/60 font-serif leading-relaxed"
+                                            >
+                                                <li>• 上部色块：26%–34%</li>
+                                                <li>• 中部竖排区：46%–54%</li>
+                                                <li>• 底部参数区：14%–18%</li>
+                                            </ul>
+                                        </div>
+                                        <div
+                                            class="border border-black/5 rounded-lg p-4 space-y-2"
+                                        >
+                                            <div class="font-serif font-bold">
+                                                视觉姿态
+                                            </div>
+                                            <ul
+                                                class="space-y-1 text-charcoal/60 font-serif leading-relaxed"
+                                            >
+                                                <li>
+                                                    • 圆角极小，接近器物边框
+                                                </li>
+                                                <li>
+                                                    • 无重阴影，hover 才轻抬
+                                                </li>
+                                                <li>
+                                                    • 竖排字是主视觉，不是标签
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div
+                                            class="border border-black/5 rounded-lg p-4 space-y-2 md:col-span-2"
+                                        >
+                                            <div
+                                                class="flex justify-between items-center"
+                                            >
+                                                <div
+                                                    class="font-serif font-bold"
+                                                >
+                                                    可复制结构
+                                                </div>
+                                                <button
+                                                    onclick="copyRodSnippet()"
+                                                    class="text-black/35 hover:text-cinnabar transition-all"
+                                                >
+                                                    <i
+                                                        class="fa-regular fa-clone"
+                                                    ></i>
+                                                </button>
+                                            </div>
+                                            <pre
+                                                id="rod-code"
+                                                class="font-mono text-[11px] text-charcoal/75 code-pre"
+                                            >
+&lt;article class="color-rod"&gt;
+  &lt;div class="h-28" style="background:#8EA9B5"&gt;&lt;/div&gt;
+  &lt;div class="flex-1 flex items-center justify-center"&gt;
+    &lt;div class="vertical-text text-2xl tracking-[0.18em]"&gt;天青&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="border-t border-black/5 px-3 py-3"&gt;...&lt;/div&gt;
+&lt;/article&gt;</pre
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="border border-black/5 rounded-xl p-5 space-y-4"
+                            >
+                                <div
+                                    class="flex justify-between items-center border-b border-black/5 pb-3"
+                                >
+                                    <h4 class="font-serif text-sm font-bold">
+                                        3. 五声音律反馈组件
+                                    </h4>
+                                    <span
+                                        class="text-[10px] font-mono text-black/30"
+                                        >PENTATONIC FEEDBACK</span
+                                    >
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center"
+                                >
+                                    <div class="space-y-3">
+                                        <p
+                                            class="text-xs text-charcoal/60 leading-relaxed font-serif"
+                                        >
+                                            用于“听色”反馈、轻提示或文化化交互反馈。以宫、商、角、徵、羽五声映射色彩的类别与层级。
+                                        </p>
+                                        <div class="grid grid-cols-5 gap-2">
+                                            <button
+                                                onclick="playTone('宫')"
+                                                class="border border-black/10 rounded-lg py-2 text-xs font-serif hover:border-cinnabar transition-all"
+                                            >
+                                                宫
+                                            </button>
+                                            <button
+                                                onclick="playTone('商')"
+                                                class="border border-black/10 rounded-lg py-2 text-xs font-serif hover:border-cinnabar transition-all"
+                                            >
+                                                商
+                                            </button>
+                                            <button
+                                                onclick="playTone('角')"
+                                                class="border border-black/10 rounded-lg py-2 text-xs font-serif hover:border-cinnabar transition-all"
+                                            >
+                                                角
+                                            </button>
+                                            <button
+                                                onclick="playTone('徵')"
+                                                class="border border-black/10 rounded-lg py-2 text-xs font-serif hover:border-cinnabar transition-all"
+                                            >
+                                                徵
+                                            </button>
+                                            <button
+                                                onclick="playTone('羽')"
+                                                class="border border-black/10 rounded-lg py-2 text-xs font-serif hover:border-cinnabar transition-all"
+                                            >
+                                                羽
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-[#faf8f5]/60 border border-black/5 rounded-lg p-6 flex flex-col items-center gap-4"
+                                    >
+                                        <div
+                                            class="flex items-end gap-1.5 h-8"
+                                            id="tone-waves"
+                                        >
+                                            <span class="wave-bar"></span>
+                                            <span class="wave-bar"></span>
+                                            <span class="wave-bar"></span>
+                                            <span class="wave-bar"></span>
+                                            <span class="wave-bar"></span>
+                                        </div>
+                                        <div
+                                            class="text-[10px] font-mono text-black/40"
+                                        >
+                                            Web Audio API / Pentatonic UI
+                                            Feedback
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section
+                            id="spec-spacing"
+                            class="spec-card p-6 md:p-8 space-y-5"
+                        >
+                            <div
+                                class="flex items-center gap-3 border-b border-black/5 pb-4"
+                            >
+                                <span
+                                    class="font-mono text-2xl text-cinnabar/30"
+                                    >05/</span
+                                >
+                                <h2 class="font-serif text-2xl tracking-wider">
+                                    间距、边框与状态
+                                </h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div
+                                    class="border border-black/5 rounded-xl p-4"
+                                >
+                                    <div class="font-serif font-bold mb-2">
+                                        间距
+                                    </div>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        主区块上下间距建议 32–64px；卡片内边距
+                                        20–24px；小型控制区 12–16px。
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4"
+                                >
+                                    <div class="font-serif font-bold mb-2">
+                                        边框
+                                    </div>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        默认使用 1px 墨灰线；重要边界可提高到
+                                        14%–24% 透明度，但不建议厚边。
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4"
+                                >
+                                    <div class="font-serif font-bold mb-2">
+                                        状态
+                                    </div>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        hover 用抬升与边线增强；selected
+                                        用朱砂；disabled 不降到过浅，保持可读。
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section
+                            id="spec-mobile"
+                            class="spec-card p-6 md:p-8 space-y-5"
+                        >
+                            <div
+                                class="flex items-center gap-3 border-b border-black/5 pb-4"
+                            >
+                                <span
+                                    class="font-mono text-2xl text-cinnabar/30"
+                                    >06/</span
+                                >
+                                <h2 class="font-serif text-2xl tracking-wider">
+                                    移动端规则
+                                </h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <div class="font-serif font-bold">
+                                        Bottom Sheet 优先
+                                    </div>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        详情页不做右侧固定栏，改用底部抽屉承载色值、典故、加入采色袋等动作。
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <div class="font-serif font-bold">
+                                        竖排字要节制
+                                    </div>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        小屏中竖排文字只保留在关键标题和色柱主体，正文说明仍以横排提高阅读效率。
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <div class="font-serif font-bold">
+                                        触达尺寸
+                                    </div>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        按钮、芯片、抽屉拖拽柄与切换项的触达高度不小于
+                                        44px。
+                                    </p>
+                                </div>
+                                <div
+                                    class="border border-black/5 rounded-xl p-4 space-y-2"
+                                >
+                                    <div class="font-serif font-bold">
+                                        信息排序
+                                    </div>
+                                    <p
+                                        class="text-xs text-charcoal/60 font-serif leading-relaxed"
+                                    >
+                                        先看颜色本体，再看色名，再看朝代与故事，最后看代码参数与复制操作。
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="sheet-backdrop" class="sheet-backdrop"></div>
+        <section id="color-sheet" class="bottom-sheet p-5 md:hidden">
+            <div class="w-12 h-1.5 rounded-full bg-black/10 mx-auto mb-4"></div>
+            <div class="flex items-start gap-4">
+                <div
+                    id="sheet-swatch"
+                    class="w-20 h-20 rounded-2xl border border-black/10 flex-shrink-0"
+                ></div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <h4 id="sheet-name" class="font-serif text-xl">
+                                天青
+                            </h4>
+                            <p
+                                id="sheet-pinyin"
+                                class="font-mono text-[11px] text-charcoal/50 mt-1"
+                            >
+                                tian qing
+                            </p>
+                        </div>
+                        <button
+                            onclick="toggleCurrentBag()"
+                            class="border border-black/10 rounded-full px-3 py-1.5 text-xs font-serif hover:border-cinnabar transition-all"
+                            id="sheet-bag-btn"
+                        >
+                            加入采色袋
+                        </button>
+                    </div>
+                    <p
+                        id="sheet-poem"
+                        class="text-xs text-charcoal/60 font-serif leading-relaxed mt-3"
+                    >
+                        雨过天青云破处，这般颜色做将来。
+                    </p>
+                    <div
+                        class="grid grid-cols-2 gap-2 mt-4 text-[11px] font-mono"
+                    >
+                        <div class="bg-[#f5f3ef] rounded-lg p-2">
+                            HEX<br /><span id="sheet-hex" class="text-charcoal"
+                                >#8EA9B5</span
+                            >
+                        </div>
+                        <div class="bg-[#f5f3ef] rounded-lg p-2">
+                            朝代<br /><span
+                                id="sheet-dynasty"
+                                class="text-charcoal"
+                                >宋朝</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="palette-drawer" class="bottom-sheet p-5">
+            <div class="w-12 h-1.5 rounded-full bg-black/10 mx-auto mb-4"></div>
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h4 class="font-serif text-lg">采色袋</h4>
+                    <p class="font-mono text-[10px] text-black/40">
+                        PALETTE BAG
+                    </p>
+                </div>
+                <button
+                    onclick="closePaletteDrawer()"
+                    class="text-black/40 hover:text-cinnabar transition-all"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div
+                id="palette-bag-list"
+                class="space-y-3 max-h-[55vh] overflow-auto"
+            ></div>
+        </div>
+
+        <div id="toast" class="toast-msg">已复制</div>
+
+        <script>
+            const COLORS = [
+                {
+                    name: "天青",
+                    pinyin: "tiān qīng",
+                    hex: "#8EA9B5",
+                    dynasty: "宋朝",
+                    hue: "青",
+                    poem: "雨过天青云破处，这般颜色做将来。",
+                    note: "汝窑天青，温润静穆。",
+                },
+                {
+                    name: "朱砂",
+                    pinyin: "zhū shā",
+                    hex: "#C12C1F",
+                    dynasty: "秦汉",
+                    hue: "赤",
+                    poem: "丹砂点染，千载不黯。",
+                    note: "矿物红，典型印章色。",
+                },
+                {
+                    name: "竹青",
+                    pinyin: "zhú qīng",
+                    hex: "#789262",
+                    dynasty: "周朝",
+                    hue: "青",
+                    poem: "修竹新梢雨初后，青阴满地入书窗。",
+                    note: "清润克制，偏植物感。",
+                },
+                {
+                    name: "月白",
+                    pinyin: "yuè bái",
+                    hex: "#D6ECF0",
+                    dynasty: "宋朝",
+                    hue: "白",
+                    poem: "月色入瓷，清寒如洗。",
+                    note: "带冷意的青白。",
+                },
+                {
+                    name: "黛蓝",
+                    pinyin: "dài lán",
+                    hex: "#425066",
+                    dynasty: "明清",
+                    hue: "黑",
+                    poem: "黛色横山远，暮云收尽时。",
+                    note: "近黑蓝，适合深背景点缀。",
+                },
+                {
+                    name: "秋香色",
+                    pinyin: "qiū xiāng sè",
+                    hex: "#D9B611",
+                    dynasty: "明清",
+                    hue: "黄",
+                    poem: "金风一动，香染庭阶。",
+                    note: "偏古器物的金黄。",
+                },
+                {
+                    name: "凝脂",
+                    pinyin: "níng zhī",
+                    hex: "#F7F0DD",
+                    dynasty: "唐朝",
+                    hue: "白",
+                    poem: "凝脂若雪，含而不耀。",
+                    note: "适合大面积浅底。",
+                },
+                {
+                    name: "胭脂",
+                    pinyin: "yān zhi",
+                    hex: "#9D2933",
+                    dynasty: "唐朝",
+                    hue: "赤",
+                    poem: "云鬓花颜金步摇，芙蓉帐暖度春宵。",
+                    note: "更深更成熟的红。",
+                },
+                {
+                    name: "鸦青",
+                    pinyin: "yā qīng",
+                    hex: "#424C50",
+                    dynasty: "明清",
+                    hue: "黑",
+                    poem: "鸦羽拂夜，沉静不言。",
+                    note: "偏青黑，适合正文重色。",
+                },
+                {
+                    name: "缃叶",
+                    pinyin: "xiāng yè",
+                    hex: "#ECD452",
+                    dynasty: "唐朝",
+                    hue: "黄",
+                    poem: "缃帙半卷，秋叶成书。",
+                    note: "更轻的书卷黄。",
+                },
+                {
+                    name: "湖蓝",
+                    pinyin: "hú lán",
+                    hex: "#30DFF3",
+                    dynasty: "明清",
+                    hue: "青",
+                    poem: "晴湖映光，风定波平。",
+                    note: "更现代、更明亮。",
+                },
+                {
+                    name: "藕荷",
+                    pinyin: "ǒu hé",
+                    hex: "#E4C6D0",
+                    dynasty: "宋朝",
+                    hue: "赤",
+                    poem: "荷气将歇，余霞成绡。",
+                    note: "适合柔和辅色。",
+                },
+            ];
+
+            let currentView = "explorer";
+            let dynastyFilter = "all";
+            let hueFilter = "all";
+            let currentCodeFormat = "css";
+            let currentColor = COLORS[0];
+            let bag = [];
+
+            function switchView(view) {
+                currentView = view;
+                document
+                    .querySelectorAll(".view-panel")
+                    .forEach((el) => el.classList.remove("active"));
+                document.getElementById(`view-${view}`).classList.add("active");
+
+                ["explorer", "exporter", "spec"].forEach((v) => {
+                    document
+                        .getElementById(`tab-${v}`)
+                        ?.classList.remove("nav-btn-active");
+                    document
+                        .getElementById(`m-tab-${v}`)
+                        ?.classList.remove("text-cinnabar");
+                });
+                document
+                    .getElementById(`tab-${view}`)
+                    ?.classList.add("nav-btn-active");
+                document
+                    .getElementById(`m-tab-${view}`)
+                    ?.classList.add("text-cinnabar");
+
+                if (view === "exporter") updateCodeOutput();
+            }
+
+            function renderColors() {
+                const q = document
+                    .getElementById("search-input")
+                    .value.trim()
+                    .toLowerCase();
+                const filtered = COLORS.filter((c) => {
+                    const matchesDynasty =
+                        dynastyFilter === "all" || c.dynasty === dynastyFilter;
+                    const matchesHue =
+                        hueFilter === "all" || c.hue === hueFilter;
+                    const matchesQuery =
+                        !q ||
+                        [c.name, c.pinyin, c.hex, c.note]
+                            .join(" ")
+                            .toLowerCase()
+                            .includes(q);
+                    return matchesDynasty && matchesHue && matchesQuery;
+                });
+
+                const container = document.getElementById(
+                    "colors-grid-container",
+                );
+                container.innerHTML = filtered
+                    .map(
+                        (c) => `
+        <article class="color-rod" onclick="selectColor('${c.name}')">
+          <div class="h-28 relative" style="background:${c.hex}">
+            <button onclick="event.stopPropagation();toggleBag('${c.name}')" class="absolute top-2 right-2 bg-white/85 border border-black/10 rounded-full w-7 h-7 text-[10px] hover:border-cinnabar transition-all">
+              <i class="fa-solid ${bag.includes(c.name) ? "fa-bookmark text-cinnabar" : "fa-plus text-charcoal/60"}"></i>
+            </button>
+          </div>
+          <div class="flex-1 flex items-center justify-center py-4">
+            <div class="vertical-text text-2xl tracking-[0.18em] text-charcoal">${c.name}</div>
+          </div>
+          <div class="border-t border-black/5 px-3 py-3 space-y-1">
+            <div class="text-[10px] font-mono text-black/40">${c.hex}</div>
+            <div class="text-[10px] font-serif text-charcoal/60 leading-relaxed line-clamp-2">${c.poem}</div>
+          </div>
+        </article>
+      `,
+                    )
+                    .join("");
+                document.getElementById("visible-count").textContent =
+                    `${filtered.length} 项`;
+
+                if (
+                    filtered.length &&
+                    !filtered.find((c) => c.name === currentColor.name)
+                ) {
+                    currentColor = filtered[0];
+                    syncPosterWithCurrent();
+                }
+            }
+
+            function filterColors() {
+                renderColors();
+            }
+
+            function setDynastyFilter(v) {
+                dynastyFilter = v;
+                document
+                    .querySelectorAll("#dynasty-filter-chips button")
+                    .forEach((b) => {
+                        b.className =
+                            "px-3 py-1 rounded-full text-[11px] border border-black/10 bg-white hover:border-cinnabar transition-all";
+                    });
+                const target = document.getElementById(`dyn-${v}`);
+                if (target)
+                    target.className =
+                        "px-3 py-1 rounded-full text-[11px] border border-black/10 bg-cinnabar text-white";
+                renderColors();
+            }
+
+            function setHueFilter(v) {
+                hueFilter = v;
+                document
+                    .querySelectorAll("#hue-filter-chips button")
+                    .forEach((b) => {
+                        b.className =
+                            "px-2 py-1.5 text-xs rounded border border-black/10 hover:border-cinnabar text-center";
+                    });
+                const target = document.getElementById(`hue-${v}`);
+                if (target)
+                    target.className =
+                        "px-2 py-1.5 text-xs rounded border border-cinnabar bg-cinnabar/5 text-cinnabar text-center";
+                renderColors();
+            }
+
+            function selectColor(name) {
+                const color = COLORS.find((c) => c.name === name);
+                if (!color) return;
+                currentColor = color;
+                syncPosterWithCurrent();
+                if (window.innerWidth < 768) {
+                    openColorSheet(color);
+                } else {
+                    showToast(`已选取「${color.name}」`);
+                }
+            }
+
+            function syncPosterWithCurrent() {
+                document.getElementById("poster-name-view").textContent =
+                    currentColor.name;
+                document.getElementById(
+                    "poster-color-circle",
+                ).style.backgroundColor = currentColor.hex;
+                document.getElementById("poster-poem-view").textContent =
+                    currentColor.poem;
+                document.getElementById("poster-hex-view").textContent =
+                    currentColor.hex;
+                document.getElementById("poster-pinyin-view").textContent =
+                    currentColor.pinyin;
+                document.getElementById("poster-dynasty-badge").textContent =
+                    `${currentColor.dynasty}风雅`;
+                updateCodeOutput();
+            }
+
+            function openColorSheet(color) {
+                document.getElementById("sheet-name").textContent = color.name;
+                document.getElementById("sheet-pinyin").textContent =
+                    color.pinyin;
+                document.getElementById("sheet-poem").textContent = color.poem;
+                document.getElementById("sheet-hex").textContent = color.hex;
+                document.getElementById("sheet-dynasty").textContent =
+                    color.dynasty;
+                document.getElementById("sheet-swatch").style.backgroundColor =
+                    color.hex;
+                document.getElementById("sheet-bag-btn").textContent =
+                    bag.includes(color.name) ? "移出采色袋" : "加入采色袋";
+                document.getElementById("sheet-backdrop").classList.add("show");
+                document.getElementById("color-sheet").classList.add("open");
+            }
+
+            function closeColorSheet() {
+                document
+                    .getElementById("sheet-backdrop")
+                    .classList.remove("show");
+                document.getElementById("color-sheet").classList.remove("open");
+            }
+
+            function toggleCurrentBag() {
+                toggleBag(currentColor.name);
+                document.getElementById("sheet-bag-btn").textContent =
+                    bag.includes(currentColor.name)
+                        ? "移出采色袋"
+                        : "加入采色袋";
+            }
+
+            function toggleBag(name) {
+                if (bag.includes(name)) {
+                    bag = bag.filter((n) => n !== name);
+                    showToast(`已移出「${name}」`);
+                } else {
+                    bag.push(name);
+                    showToast(`已收入「${name}」`);
+                }
+                updateBagUI();
+                renderColors();
+            }
+
+            function updateBagUI() {
+                document.getElementById("bag-count").textContent = bag.length;
+                const list = document.getElementById("palette-bag-list");
+                const select = document.getElementById("bag-color-select");
+
+                if (!bag.length) {
+                    list.innerHTML = `<div class="text-sm text-charcoal/45 font-serif py-6 text-center">暂未采色。请在「天工开物」中挑选心仪之色。</div>`;
+                    select.innerHTML = `<option value="">-- 空空如也（请先采色）--</option>`;
+                    return;
+                }
+
+                list.innerHTML = bag
+                    .map((name) => {
+                        const c = COLORS.find((x) => x.name === name);
+                        return `
+          <div class="flex items-center gap-3 border border-black/5 rounded-xl p-3 bg-[#faf8f5]/55">
+            <div class="w-10 h-10 rounded-lg border border-black/10" style="background:${c.hex}"></div>
+            <div class="flex-1 min-w-0">
+              <div class="font-serif">${c.name}</div>
+              <div class="font-mono text-[10px] text-black/40">${c.hex} · ${c.dynasty}</div>
+            </div>
+            <button onclick="loadColorToPoster('${c.name}');switchView('exporter');closePaletteDrawer()" class="text-xs border border-black/10 hover:border-cinnabar rounded-full px-3 py-1 font-serif transition-all">装裱</button>
+          </div>
+        `;
+                    })
+                    .join("");
+
+                select.innerHTML =
+                    `<option value="">-- 选择采色袋中的主色 --</option>` +
+                    bag
+                        .map((name) => {
+                            const c = COLORS.find((x) => x.name === name);
+                            return `<option value="${c.name}">${c.name} · ${c.hex}</option>`;
+                        })
+                        .join("");
+            }
+
+            function openPaletteDrawer() {
+                updateBagUI();
+                document.getElementById("sheet-backdrop").classList.add("show");
+                document.getElementById("palette-drawer").classList.add("open");
+            }
+
+            function closePaletteDrawer() {
+                document
+                    .getElementById("sheet-backdrop")
+                    .classList.remove("show");
+                document
+                    .getElementById("palette-drawer")
+                    .classList.remove("open");
+            }
+
+            document
+                .getElementById("sheet-backdrop")
+                .addEventListener("click", () => {
+                    closeColorSheet();
+                    closePaletteDrawer();
+                });
+
+            function loadColorToPoster(name) {
+                const color = COLORS.find((c) => c.name === name);
+                if (!color) return;
+                currentColor = color;
+                syncPosterWithCurrent();
+                showToast(`已将「${color.name}」装裱入画轴`);
+            }
+
+            function updatePosterSeal() {
+                const val = (
+                    document.getElementById("seal-custom-input").value || "雅赏"
+                )
+                    .trim()
+                    .slice(0, 4);
+                document.getElementById("poster-seal-view").textContent =
+                    val || "雅赏";
+            }
+
+            function showCodeFormat(format) {
+                currentCodeFormat = format;
+                ["css", "tailwind", "json"].forEach((f) => {
+                    document.getElementById(`btn-fmt-${f}`).className =
+                        `px-2 py-1 rounded ${f === format ? "bg-cinnabar text-white" : "bg-black/5 text-charcoal"}`;
+                });
+                updateCodeOutput();
+            }
+
+            function updateCodeOutput() {
+                const c = currentColor;
+                const output = document.getElementById("code-output");
+                if (currentCodeFormat === "css") {
+                    output.textContent = `:root {
+  --color-${c.name}: ${c.hex};
+  --color-${c.name}-rgb: ${hexToRgb(c.hex)};
+  --paper-bg: #FAF8F5;
+  --ink-fg: #2B2B2B;
+  --accent-cinnabar: #C12C1F;
+}`;
+                } else if (currentCodeFormat === "tailwind") {
+                    output.textContent = `extend: {
+  colors: {
+    "${c.name}": "${c.hex}",
+    paper: "#FAF8F5",
+    charcoal: "#2B2B2B",
+    cinnabar: "#C12C1F"
+  }
+}`;
+                } else {
+                    output.textContent = JSON.stringify(
+                        {
+                            name: c.name,
+                            pinyin: c.pinyin,
+                            hex: c.hex,
+                            rgb: hexToRgb(c.hex),
+                            dynasty: c.dynasty,
+                            hue: c.hue,
+                            poem: c.poem,
+                        },
+                        null,
+                        2,
+                    );
+                }
+            }
+
+            function copyCodeOutput() {
+                copyText(
+                    document.getElementById("code-output").textContent,
+                    "代码已复制",
+                );
+            }
+
+            function updateSealDemo() {
+                const input = (
+                    document.getElementById("seal-text-input").value || "雅赏"
+                )
+                    .trim()
+                    .slice(0, 4);
+                document.getElementById("live-seal-preview").textContent =
+                    input || "雅赏";
+                showToast("印章已更新");
+            }
+
+            function copySealSnippet() {
+                const text =
+                    (document.getElementById("seal-text-input").value || "雅赏")
+                        .trim()
+                        .slice(0, 4) || "雅赏";
+                copyText(
+                    `<div class="cinnabar-seal w-16 h-16 flex items-center justify-center font-bold text-base rounded-sm">${text}</div>`,
+                    "印章 HTML 已复制",
+                );
+            }
+
+            function copySealCss() {
+                copyText(
+                    `.cinnabar-seal{
+  border:2px solid #C12C1F;
+  color:#C12C1F;
+  writing-mode:vertical-rl;
+  text-align:center;
+  letter-spacing:.1em;
+  background:radial-gradient(circle, rgba(250,248,245,.86) 0%, rgba(250,248,245,.45) 100%);
+}`,
+                    "印章 CSS 已复制",
+                );
+            }
+
+            function copyRodSnippet() {
+                copyById("rod-code", "色柱结构已复制");
+            }
+
+            function playTone(scale) {
+                const toneMap = {
+                    宫: 261.63,
+                    商: 293.66,
+                    角: 329.63,
+                    徵: 392.0,
+                    羽: 440.0,
+                };
+                const freq = toneMap[scale] || 261.63;
+                const audioCtx = new (
+                    window.AudioContext || window.webkitAudioContext
+                )();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = "sine";
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(
+                    0.08,
+                    audioCtx.currentTime + 0.02,
+                );
+                gain.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    audioCtx.currentTime + 0.9,
+                );
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.9);
+                animateWaves();
+            }
+
+            function animateWaves() {
+                const bars = document.querySelectorAll("#tone-waves .wave-bar");
+                bars.forEach((b, i) => {
+                    b.classList.add("playing");
+                    b.style.animationDelay = `${i * 0.08}s`;
+                });
+                setTimeout(() => {
+                    bars.forEach((b) => {
+                        b.classList.remove("playing");
+                        b.style.animationDelay = "0s";
+                    });
+                }, 1100);
+            }
+
+            function hexToRgb(hex) {
+                const h = hex.replace("#", "");
+                const bigint = parseInt(h, 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = bigint & 255;
+                return `${r}, ${g}, ${b}`;
+            }
+
+            function copyById(id, msg) {
+                copyText(document.getElementById(id).textContent, msg);
+            }
+
+            function copyText(text, msg = "已复制") {
+                navigator.clipboard.writeText(text).then(() => showToast(msg));
+            }
+
+            function showToast(msg) {
+                const toast = document.getElementById("toast");
+                toast.textContent = msg;
+                toast.classList.add("show");
+                clearTimeout(window.__toastTimer);
+                window.__toastTimer = setTimeout(
+                    () => toast.classList.remove("show"),
+                    1800,
+                );
+            }
+
+            renderColors();
+            updateBagUI();
+            syncPosterWithCurrent();
+            updateCodeOutput();
+        </script>
+    </body>
+</html>
